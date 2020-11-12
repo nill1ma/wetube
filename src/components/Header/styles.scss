@@ -1,0 +1,45 @@
+@import '../variables.scss';
+
+.header-container{
+    display: flex;
+    width: 100vw;
+    height: 15vh;
+    align-items: center;
+    justify-content: space-around;
+    background-color:$matteBlack;
+    .logo{
+        display: flex;
+        width: 10vw;
+        border:1px solid #fff;
+        color:#fff;
+    }
+    .research{
+        display: flex;
+        border-bottom:1px solid rgba(255,255,255, 0.9);
+        .icon{
+            color: #fff;
+        }
+        input{
+            width: 40vw;
+            padding: 5px;
+            outline: none;
+            border:none;
+            background-color: $matteBlack;
+            color:#fff;
+        }
+    }
+    
+    ul{
+        display: flex;
+        justify-content: space-between;
+        width: 10vw;
+        li{
+            list-style: none;
+            color: #fff;
+            cursor: pointer;
+            .header-link{
+                text-decoration: none;
+            }
+        }
+    }
+}
