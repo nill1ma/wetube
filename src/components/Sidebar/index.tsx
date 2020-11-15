@@ -16,7 +16,7 @@ const menu = [
 
 export default function Sidebar() {
 
-    const [theme, setTheme] = useContext(ThemeContext)
+    const [theme] = useContext(ThemeContext)
     const [hover, setHover] = useState(
         { active: false, id: '' }
     )
@@ -33,7 +33,11 @@ export default function Sidebar() {
                     <ul>
                         {menu.map((mn) => {
                             return <Link key={mn.title} style={{ color: theme.font, textDecoration: 'none' }} to={mn.link}>
-                                <li style={hover.active && hover.id === mn.title ? { background: theme.section } : { background: theme.sideBar }} onMouseEnter={() => setHover({ active: true, id: mn.title })} onMouseLeave={() => setHover({ active: false, id: '' })} >
+                                <li style={hover.active && hover.id === mn.title
+                                    ? { background: theme.section }
+                                    : { background: theme.sideBar }}
+                                    onMouseEnter={() => setHover({ active: true, id: mn.title })}
+                                    onMouseLeave={() => setHover({ active: false, id: '' })} >
                                     <div className={'icon'}>
                                         <FontAwesomeIcon size={"lg"} icon={mn.icon} />
                                     </div>

@@ -7,14 +7,13 @@
     height: 100vh;
     .section{
         width: 100%;
-        padding: 0;
+        padding: 0 0 0 20px;
         display: flex;
-        justify-content: center;
         flex-wrap: wrap;
         height: 80vh;
         .video-box{
             width: 30%;
-            height: 45%;
+            height: 30%;
             flex-direction: column;
             margin: 0 10px;
             .actions{
@@ -56,16 +55,16 @@
         height: 10vh;
         padding-top: 20px;
         .input-area{
+            display: flex;
+            width: 70%;
+            border-bottom: 1px solid #fff;
             .icon{
                 padding: 10px 20px;
                 background-color: rgba(255,255,255, 0.5);
                 border:none;
                 outline: none;
-                cursor: pointer;
+                cursor: pointer !important;
             }
-            display: flex;
-            width: 70%;
-            border-bottom: 1px solid #fff;
             input{
                 font-size: 18px;
                 padding: 0 10px;
