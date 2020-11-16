@@ -9,8 +9,8 @@ import Theme from '../Theme';
 
 const menu = [
     { title: 'Home', icon: faHome, isize: 'lg', link: '/' },
-    { title: 'Favorite', icon: faStar, isize: 'lg', link: 'favorites' },
-    { title: 'Playlists', icon: faTasks, isize: 'lg', link: 'playlists' },
+    { title: 'Favorite', icon: faStar, isize: 'lg', link: 'favorites'},
+    { title: 'Playlists', icon: faTasks, isize: 'lg', link: 'create' },
     { title: 'Settings', icon: faCogs, isize: 'lg', link: '/' }
 ]
 

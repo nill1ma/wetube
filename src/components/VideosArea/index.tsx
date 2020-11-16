@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react'
+import { faSearch, faStar, faFolderPlus, faArrowAltCircleLeft, faArrowAltCircleRight, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import ReactTooltip from "react-tooltip";
 import { Videos } from '../../interfaces/Videos'
 import './styles.scss'
 import { search } from '../../services/YoutubeApi'
-import { faSearch, faStar, faFolderPlus, faArrowAltCircleLeft, faArrowAltCircleRight, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import YouTube from 'react-youtube';
 import ThemeContext from '../../context';
 import { removeVideo } from '../../services/Util'
@@ -18,7 +19,10 @@ export default function VideosArea() {
 
     var list: Videos[] = []
 
-    const colorTag = ['rgb(255, 140, 0)', 'rgba(255, 255, 255, 0.5)']
+    const colorTag = [
+        'rgb(255, 140, 0)',
+        'rgba(255, 255, 255, 0.5)'
+    ]
 
 
     useEffect(() => {
@@ -48,9 +52,9 @@ export default function VideosArea() {
                 title: item.snippet.title,
                 id: item.id.videoId,
                 favorite: is('favorites', item.id.videoId) ? true : false,
-                fcolor: is('favorites', item.id.videoId) ? colorTag[0] : colorTag[1],
+                fcolor: is('favorites', item.id.videoId) ? theme.activeIcon : theme.unactiveIcon,
                 playlist: is('playlists', item.id.videoId) ? true : false,
-                pcolor: is('playlists', item.id.videoId) ? colorTag[0] : colorTag[1],
+                pcolor: is('playlists', item.id.videoId) ? theme.activeIcon : theme.unactiveIcon,
             }
             list.push(obj)
         })
@@ -102,7 +106,7 @@ export default function VideosArea() {
         field === 'favorites' ? color = 'fcolor' : color = 'pcolor'
         let remove = list.find((l: any) => { return l.id === value.id })
         if (remove) {
-            list = removeVideo(field, JSON.parse(localStorage.getItem('favorites')!), remove.id);
+            list = removeVideo(field, JSON.parse(localStorage.getItem(field)!), remove.id);
         } else { list.push(value) }
 
         localStorage.setItem(field, JSON.stringify(list))
@@ -110,9 +114,9 @@ export default function VideosArea() {
         videos.forEach((video: any) => {
             if (video.id === value.id) {
                 if (remove) {
-                    video[field] = false; video[color] = colorTag[1]
+                    video[field] = false; video[color] = theme.unactiveColor
                 } else {
-                    video[field] = true; video[color] = colorTag[0]
+                    video[field] = true; video[color] = theme.activeColor
                 }
             }
         })
@@ -144,15 +148,28 @@ export default function VideosArea() {
                                 <div key={video.id} className="video-box">
                                     <div className="actions">
                                         <div className="icons-box">
-                                            <FontAwesomeIcon onClick={() => handlePlayList(video.id, !video.playlist)} color={video.pcolor} icon={faFolderPlus} />
-                                            <FontAwesomeIcon onClick={() => handleFavorite(video.id, !video.favorite)} color={video.fcolor} icon={faStar} />
+                                            <FontAwesomeIcon onClick={() => handlePlayList(video.id, !video.playlist)} color={video.playlist ? theme.activeIcon: theme.unactiveIcon} icon={faFolderPlus} />
+                                            <FontAwesomeIcon onClick={() => handleFavorite(video.id, !video.favorite)} color={video.favorite ? theme.activeIcon: theme.unactiveIcon} icon={faStar} />
                                         </div>
                                     </div>
                                     <YouTube
                                         opts={{ height: '200', width: '100%' }}
                                         id={`${video.id}`}
                                         videoId={`${video.id}`} />
-                                    <span>{video.title.substring(0, 35)}{video.title.length > 35 ? '...' : ''}</span>
+                                    <span data-tip data-for={video.id}>{
+                                        video.title.substring(0, 35)}
+                                        {video.title.length > 35 ? '...' : ''}
+                                    </span>
+                                    <ReactTooltip
+                                        id={video.id}
+                                        className={'tooltip'}
+                                        type={'info'}
+                                        textColor={'#2C2C2C'}
+                                        border={true}
+                                        borderColor={'#2C2C2C'}
+                                        place={'bottom'}
+                                        getContent={() => video.title}
+                                    />
                                 </div>
                             </>
                         )

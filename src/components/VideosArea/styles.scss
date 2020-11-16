@@ -16,6 +16,11 @@
             height: 30%;
             flex-direction: column;
             margin: 0 10px;
+            .tooltip{
+                color: #2C2C2C;
+                font-weight: bolder;
+                max-width: 20vw;
+            }
             .actions{
                 display: flex;
                 width: 100%;

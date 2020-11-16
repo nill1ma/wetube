@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar';
 import VideosArea from './components/VideosArea';
 import Favorites from './components/VideosArea/Favorites';
 import Playlists from './components/VideosArea/Playlists';
+import Create from './components/VideosArea/Playlists/Create';
 import ThemeContext from './context';
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
             <ThemeContext.Provider value={[theme, setTheme]}>
               <Sidebar />
               <Route path={'/favorites'} component={Favorites} />
+              <Route path={'/create'} component={Create} />
               <Route path={'/playlists'} component={Playlists} />
               <Route path={'/'} exact component={VideosArea} />
             </ThemeContext.Provider>

@@ -6,7 +6,6 @@ import ThemeContext from '../../../context';
 import { removeVideo } from '../../../services/Util'
 import './styles.scss'
 
-
 export default function Favorites() {
 
     const [keyWord, setKeyWord] = useState('')
