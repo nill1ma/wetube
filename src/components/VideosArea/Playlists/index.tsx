@@ -11,20 +11,21 @@ export default function Playlists() {
 
     const [paagination, setPagination] = useState([0, 6])
     const [playlists, setPlaylists] = useState<any>([])
-    const [playlistItems, setPlaylistItems] = useState([{ title: '', id: '' }])
+    const [playlistItems, setPlaylistItems] = useState([{ playlistId: 0, title: '', id: '' }])
     const [theme] = useContext(ThemeContext)
     const colorTag = ['rgb(255, 140, 0)', 'rgba(255, 255, 255, 0.5)']
     const [edit, setEdit] = useState(false)
+    const [currentAba, setCurrentAba] = useState(0)
 
     useEffect(() => {
         let l = JSON.parse(localStorage.getItem('allPlaylists') || '[]')
         setPlaylists(Array.from(l))
-        let list = JSON.parse(localStorage.getItem('playlists') || '[]')
+        let list = JSON.parse(localStorage.getItem('playlistItems') || '[]')
         setPlaylistItems(Array.from(list))
     }, [])
 
     const removePlaylistItem = (id: any) => {
-        let response = removeVideo('playlists', playlists, id)
+        let response = removeVideo('playlistItems', playlists, id)
         setPlaylistItems(response)
         var researched = JSON.parse(localStorage.getItem('researched')!)
         researched.map((r: any) => {
@@ -36,6 +37,7 @@ export default function Playlists() {
         playlists.map((playlist: any) => {
             return playlist.id === id ? playlist.active = true : playlist.active = false
         })
+        setCurrentAba(id)
         localStorage.setItem('allPlaylists', JSON.stringify(playlists))
         setPlaylists(JSON.parse(localStorage.getItem('allPlaylists')!))
     }
@@ -59,11 +61,11 @@ export default function Playlists() {
                     </div>
                     <Link to={'create'} className="add">
                         <FontAwesomeIcon className={'icon'} color={theme.font} size={'2x'} icon={faPlusCircle} />
-                        <span style={{ color: theme.font }}>Add more</span>
+                        <span style={{ color: theme.font }}>Add Playlist</span>
                     </Link>
                 </div>
                 <div className="section">
-                    {playlistItems && playlistItems.length > 0 ? playlistItems.slice(paagination[0], paagination[1]).map((video) => {
+                    {playlistItems && playlistItems.length > 0 ? playlistItems.filter((video) => currentAba === video.playlistId).slice(paagination[0], paagination[1]).map((video) => {
                         return (
 
                             <div key={video.id} className="video-box">
@@ -78,7 +80,6 @@ export default function Playlists() {
                                     videoId={`${video.id}`} />
                                 <span>{video.title.substring(0, 35)}{video.title.length > 35 ? '...' : ''}</span>
                             </div>
-
                         )
                     }) : (
                             <div className={'empity-message'}>

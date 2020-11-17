@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { faSearch, faStar, faFolderPlus, faArrowAltCircleLeft, faArrowAltCircleRight, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import ReactTooltip from "react-tooltip";
+import ReactTooltip from "react-tooltip"
+import Modal from "react-modal"
 import { Videos } from '../../interfaces/Videos'
 import './styles.scss'
 import { search } from '../../services/YoutubeApi'
@@ -16,6 +17,12 @@ export default function VideosArea() {
     const [next, setNext] = useState('')
     const [back, setBack] = useState('')
     const [theme] = useContext(ThemeContext)
+    const [playlistId, setPlaylistId] = useState(0)
+    const [newPlaylistVideo, setNewPlaylistVideo] = useState({
+        id: '',
+        isAdded: false
+    })
+    const [playlistNames, setPlaylistNames] = useState<any>([])
 
     var list: Videos[] = []
 
@@ -24,11 +31,17 @@ export default function VideosArea() {
         'rgba(255, 255, 255, 0.5)'
     ]
 
+    const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
         var list = JSON.parse(localStorage.getItem('researched') || '[]')
         setVideos(list)
+        setPlaylistNames(JSON.parse(localStorage.getItem('allPlaylists')!))
     }, [])
+
+    useEffect(() => {
+        if (isOpen) setPlaylistId(playlistNames[0].id)
+    }, [isOpen])
 
     const is = (field: string, id: string) => {
         var is: any
@@ -53,8 +66,8 @@ export default function VideosArea() {
                 id: item.id.videoId,
                 favorite: is('favorites', item.id.videoId) ? true : false,
                 fcolor: is('favorites', item.id.videoId) ? theme.activeIcon : theme.unactiveIcon,
-                playlist: is('playlists', item.id.videoId) ? true : false,
-                pcolor: is('playlists', item.id.videoId) ? theme.activeIcon : theme.unactiveIcon,
+                playlist: is('playlistItems', item.id.videoId) ? true : false,
+                pcolor: is('playlistItems', item.id.videoId) ? theme.activeIcon : theme.unactiveIcon,
             }
             list.push(obj)
         })
@@ -87,13 +100,22 @@ export default function VideosArea() {
     }
 
     const handlePlayList = (idVideo: string, playlist: boolean) => {
+
         videos.map((video) => {
             if (video.id === idVideo) {
                 video.playlist = playlist;
                 video.playlist ?
                     video.pcolor = colorTag[0]
                     : video.pcolor = colorTag[1]
-                setLocalStorage('playlists', video)
+
+                let value = {
+                    id: idVideo,
+                    pcolor: video.pcolor,
+                    playlist: video.playlist,
+                    title: video.title,
+                    playlistId: playlistId
+                }
+                setLocalStorage('playlistItems', value)
             }
         })
         setVideos([...videos])
@@ -124,6 +146,10 @@ export default function VideosArea() {
         setVideos(JSON.parse(localStorage.getItem('researched')!))
     }
 
+    function close() {
+        setIsOpen(false)
+    }
+
     return (
         <>
             <div style={{ background: theme.section, color: theme.font }} className="videos-container">
@@ -148,8 +174,10 @@ export default function VideosArea() {
                                 <div key={video.id} className="video-box">
                                     <div className="actions">
                                         <div className="icons-box">
-                                            <FontAwesomeIcon onClick={() => handlePlayList(video.id, !video.playlist)} color={video.playlist ? theme.activeIcon: theme.unactiveIcon} icon={faFolderPlus} />
-                                            <FontAwesomeIcon onClick={() => handleFavorite(video.id, !video.favorite)} color={video.favorite ? theme.activeIcon: theme.unactiveIcon} icon={faStar} />
+                                            {/* <FontAwesomeIcon onClick={() => handlePlayList(video.id, !video.playlist)} color={video.playlist ? theme.activeIcon : theme.unactiveIcon} icon={faFolderPlus} />
+                                            <FontAwesomeIcon onClick={() => handleFavorite(video.id, !video.favorite)} color={video.favorite ? theme.activeIcon : theme.unactiveIcon} icon={faStar} /> */}
+                                            <FontAwesomeIcon onClick={() => { setNewPlaylistVideo({ id: video.id, isAdded: !video.playlist }); setIsOpen(true) }} color={video.playlist ? theme.activeIcon : theme.unactiveIcon} icon={faFolderPlus} />
+                                            <FontAwesomeIcon onClick={() => handleFavorite(video.id, !video.favorite)} color={video.favorite ? theme.activeIcon : theme.unactiveIcon} icon={faStar} />
                                         </div>
                                     </div>
                                     <YouTube
@@ -171,6 +199,74 @@ export default function VideosArea() {
                                         getContent={() => video.title}
                                     />
                                 </div>
+                                <Modal
+                                    isOpen={isOpen}
+                                    onRequestClose={close}
+                                    style={{
+                                        overlay: {
+                                            display: 'flex',
+                                            backgroundColor: theme.sideBar,
+                                            width: '40vw',
+                                            justifyContent: 'center',
+                                            margin: 'auto',
+                                            opacity: '95%',
+                                            height: '300px',
+                                            borderRadius: '10px'
+                                        },
+                                        content: {
+                                            background: theme.sideBar,
+                                            overflow: "auto",
+                                            WebkitOverflowScrolling: "touch",
+                                            borderRadius: "4px",
+                                            outline: "none",
+                                            border: 'none',
+                                            padding: "10px",
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            color: theme.font,
+                                            fontSize: '18px',
+                                        }
+                                    }}
+                                >
+                                    <span>Choose a Playlist</span>
+                                    <select
+                                        onChange={(e) => setPlaylistId(Number(e.target.value))}
+                                        style={{
+                                            marginTop: '10px',
+                                            width: '100%',
+                                            fontSize: '16px',
+                                            outline: 'none',
+                                            padding: '20px',
+                                            opacity: '100%',
+                                            backgroundColor: theme.section,
+                                            color: theme.font
+                                        }}>
+                                        {playlistNames.map((all: any) => {
+                                            return <>
+                                                <option value={all.id}> {all.name}</option>
+                                            </>
+                                        })}
+                                    </select>
+                                    <button
+                                        onClick={() => handlePlayList(newPlaylistVideo.id, newPlaylistVideo.isAdded)}
+                                        style={{
+                                            marginTop: '10px',
+                                            borderRadius: '10px',
+                                            cursor: 'pointer',
+                                            fontWeight: 'bold',
+                                            color: theme.font,
+                                            backgroundColor: '#1a2eff',
+                                            width: '80%',
+                                            padding: '10px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            border: 'none',
+                                            outline: 'none'
+                                        }}>Save</button>
+                                </Modal>
                             </>
                         )
                     }) : (
