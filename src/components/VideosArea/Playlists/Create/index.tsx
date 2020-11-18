@@ -1,10 +1,10 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { NONAME } from 'dns'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import ThemeContext from '../../../../context'
 import './styles.scss'
+import { redirect } from '../../../../services/Util'
 
 
 export default function Create() {
@@ -21,11 +21,8 @@ export default function Create() {
         l = [...JSON.parse(localStorage.getItem('allPlaylists')!) || []]
         l.push(allPlaylists)
         localStorage.setItem('allPlaylists', JSON.stringify(l))
-        redirect()
-        
-    }
-    const redirect = () => {
-        history.push('playlists')
+        redirect(history, 'playlists')
+
     }
     return (
         <>

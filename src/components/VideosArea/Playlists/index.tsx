@@ -20,6 +20,7 @@ export default function Playlists() {
     useEffect(() => {
         let l = JSON.parse(localStorage.getItem('allPlaylists') || '[]')
         setPlaylists(Array.from(l))
+        setCurrentAba(l[0].id)
         let list = JSON.parse(localStorage.getItem('playlistItems') || '[]')
         setPlaylistItems(Array.from(list))
     }, [])
@@ -67,7 +68,6 @@ export default function Playlists() {
                 <div className="section">
                     {playlistItems && playlistItems.length > 0 ? playlistItems.filter((video) => currentAba === video.playlistId).slice(paagination[0], paagination[1]).map((video) => {
                         return (
-
                             <div key={video.id} className="video-box">
                                 <div className="actions">
                                     <div className="icons-box">

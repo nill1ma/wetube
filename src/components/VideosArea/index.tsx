@@ -9,6 +9,7 @@ import { search } from '../../services/YoutubeApi'
 import YouTube from 'react-youtube';
 import ThemeContext from '../../context';
 import { removeVideo } from '../../services/Util'
+import { Link } from 'react-router-dom';
 
 export default function VideosArea() {
 
@@ -100,25 +101,28 @@ export default function VideosArea() {
     }
 
     const handlePlayList = (idVideo: string, playlist: boolean) => {
+        if (idVideo && idVideo !== '') {
+            videos.map((video) => {
+                if (video.id === idVideo) {
+                    video.playlist = playlist;
+                    video.playlist ?
+                        video.pcolor = colorTag[0]
+                        : video.pcolor = colorTag[1]
 
-        videos.map((video) => {
-            if (video.id === idVideo) {
-                video.playlist = playlist;
-                video.playlist ?
-                    video.pcolor = colorTag[0]
-                    : video.pcolor = colorTag[1]
-
-                let value = {
-                    id: idVideo,
-                    pcolor: video.pcolor,
-                    playlist: video.playlist,
-                    title: video.title,
-                    playlistId: playlistId
+                    let value = {
+                        id: idVideo,
+                        pcolor: video.pcolor,
+                        playlist: video.playlist,
+                        title: video.title,
+                        playlistId: playlistId
+                    }
+                    setLocalStorage('playlistItems', value)
+                    setIsOpen(false)
                 }
-                setLocalStorage('playlistItems', value)
-            }
-        })
-        setVideos([...videos])
+            })
+            setVideos([...videos])
+        }
+
     }
 
     const setLocalStorage = (field: string, value: any) => {
@@ -146,7 +150,7 @@ export default function VideosArea() {
         setVideos(JSON.parse(localStorage.getItem('researched')!))
     }
 
-    function close() {
+    const close = () => {
         setIsOpen(false)
     }
 
@@ -174,8 +178,6 @@ export default function VideosArea() {
                                 <div key={video.id} className="video-box">
                                     <div className="actions">
                                         <div className="icons-box">
-                                            {/* <FontAwesomeIcon onClick={() => handlePlayList(video.id, !video.playlist)} color={video.playlist ? theme.activeIcon : theme.unactiveIcon} icon={faFolderPlus} />
-                                            <FontAwesomeIcon onClick={() => handleFavorite(video.id, !video.favorite)} color={video.favorite ? theme.activeIcon : theme.unactiveIcon} icon={faStar} /> */}
                                             <FontAwesomeIcon onClick={() => { setNewPlaylistVideo({ id: video.id, isAdded: !video.playlist }); setIsOpen(true) }} color={video.playlist ? theme.activeIcon : theme.unactiveIcon} icon={faFolderPlus} />
                                             <FontAwesomeIcon onClick={() => handleFavorite(video.id, !video.favorite)} color={video.favorite ? theme.activeIcon : theme.unactiveIcon} icon={faStar} />
                                         </div>
@@ -204,13 +206,11 @@ export default function VideosArea() {
                                     onRequestClose={close}
                                     style={{
                                         overlay: {
-                                            display: 'flex',
                                             backgroundColor: theme.sideBar,
-                                            width: '40vw',
-                                            justifyContent: 'center',
+                                            width: '35vw',
                                             margin: 'auto',
-                                            opacity: '95%',
-                                            height: '300px',
+                                            opacity: '40%',
+                                            height: '260px',
                                             borderRadius: '10px'
                                         },
                                         content: {
@@ -220,7 +220,6 @@ export default function VideosArea() {
                                             borderRadius: "4px",
                                             outline: "none",
                                             border: 'none',
-                                            padding: "10px",
                                             display: 'flex',
                                             flexDirection: 'column',
                                             justifyContent: 'center',
@@ -230,7 +229,11 @@ export default function VideosArea() {
                                         }
                                     }}
                                 >
-                                    <span>Choose a Playlist</span>
+                                    <span style={{ alignSelf: 'flex-end' }}>
+                                        <Link style={{ textDecoration: 'none', color: '#1a2eff', fontSize: '16px' }} to={'create'}>
+                                            Add New Playlist
+                                        </Link>
+                                    </span>
                                     <select
                                         onChange={(e) => setPlaylistId(Number(e.target.value))}
                                         style={{
@@ -243,29 +246,49 @@ export default function VideosArea() {
                                             backgroundColor: theme.section,
                                             color: theme.font
                                         }}>
+                                        <option value={''}>Choose a Playlist</option>
                                         {playlistNames.map((all: any) => {
                                             return <>
                                                 <option value={all.id}> {all.name}</option>
                                             </>
                                         })}
                                     </select>
-                                    <button
-                                        onClick={() => handlePlayList(newPlaylistVideo.id, newPlaylistVideo.isAdded)}
-                                        style={{
-                                            marginTop: '10px',
-                                            borderRadius: '10px',
-                                            cursor: 'pointer',
-                                            fontWeight: 'bold',
-                                            color: theme.font,
-                                            backgroundColor: '#1a2eff',
-                                            width: '80%',
-                                            padding: '10px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            border: 'none',
-                                            outline: 'none'
-                                        }}>Save</button>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                        <button
+                                            onClick={() => setIsOpen(false)}
+                                            style={{
+                                                marginTop: '10px',
+                                                borderRadius: '2px',
+                                                cursor: 'pointer',
+                                                fontWeight: 'bold',
+                                                color: theme.font,
+                                                backgroundColor: '#f00',
+                                                width: '45%',
+                                                padding: '10px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                border: 'none',
+                                                outline: 'none'
+                                            }}>Cancel</button>
+                                        <button
+                                            onClick={() => handlePlayList(newPlaylistVideo.id, newPlaylistVideo.isAdded)}
+                                            style={{
+                                                marginTop: '10px',
+                                                borderRadius: '2px',
+                                                cursor: 'pointer',
+                                                fontWeight: 'bold',
+                                                color: theme.font,
+                                                backgroundColor: '#1a2eff',
+                                                width: '45%',
+                                                padding: '10px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                border: 'none',
+                                                outline: 'none'
+                                            }}>Save</button>
+                                    </div>
                                 </Modal>
                             </>
                         )
