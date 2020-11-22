@@ -1,6 +1,6 @@
+import React, { useContext, useEffect, useState } from 'react'
 import { faArrowAltCircleLeft, faArrowAltCircleRight, faInfoCircle, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useContext, useEffect, useState } from 'react'
 import YouTube from 'react-youtube';
 import ThemeContext from '../../../context';
 import { removeVideo } from '../../../services/Util'
