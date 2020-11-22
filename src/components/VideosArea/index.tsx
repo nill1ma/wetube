@@ -183,7 +183,7 @@ export default function VideosArea() {
                                         </div>
                                     </div>
                                     <YouTube
-                                        opts={{ height: '200', width: '100%' }}
+                                        opts={{ height: '180', width: '100%' }}
                                         id={`${video.id}`}
                                         videoId={`${video.id}`} />
                                     <span data-tip data-for={video.id}>{
@@ -303,10 +303,10 @@ export default function VideosArea() {
                     <div className="page-token">
                         <div className="buttons">
                             <button style={{ background: 'unset' }} onClick={() => research(back)} >
-                                <FontAwesomeIcon size={'2x'} color={theme.font} icon={faArrowAltCircleLeft} />
+                                <FontAwesomeIcon style={{width:'100%', height:'100%'}} color={theme.font} icon={faArrowAltCircleLeft} />
                             </button>
                             <button style={{ background: 'unset' }} onClick={() => research(next)}>
-                                <FontAwesomeIcon size={'2x'} color={theme.font} icon={faArrowAltCircleRight} />
+                                <FontAwesomeIcon style={{width:'100%', height:'100%'}} color={theme.font} icon={faArrowAltCircleRight} />
                             </button>
                         </div>
                     </div>

@@ -71,6 +71,10 @@
             width: 95%;
             padding: 10px;
             .aba {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
                 margin-left: 10px;
                 outline: none;
                 width: 10%;

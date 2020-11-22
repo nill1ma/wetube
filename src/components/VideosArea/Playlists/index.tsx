@@ -1,4 +1,4 @@
-import { faArrowAltCircleLeft, faArrowAltCircleRight, faInfoCircle, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faArrowAltCircleLeft, faArrowAltCircleRight, faInfoCircle, faPlusCircle, faTrashAlt, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -10,23 +10,35 @@ import './styles.scss';
 export default function Playlists() {
 
     const [paagination, setPagination] = useState([0, 6])
-    const [playlists, setPlaylists] = useState<any>([])
+    const [playlists, setPlaylists] = useState<any>([
+        {
+            id: 0,
+            actvive: false,
+            name: ''
+        }
+    ])
     const [playlistItems, setPlaylistItems] = useState([{ playlistId: 0, title: '', id: '' }])
     const [theme] = useContext(ThemeContext)
-    const colorTag = ['rgb(255, 140, 0)', 'rgba(255, 255, 255, 0.5)']
     const [edit, setEdit] = useState(false)
     const [currentAba, setCurrentAba] = useState(0)
+    const colorTag = ['rgb(255, 140, 0)', 'rgba(255, 255, 255, 0.5)']
 
     useEffect(() => {
         let l = JSON.parse(localStorage.getItem('allPlaylists') || '[]')
         setPlaylists(Array.from(l))
-        setCurrentAba(l[0].id)
         let list = JSON.parse(localStorage.getItem('playlistItems') || '[]')
         setPlaylistItems(Array.from(list))
     }, [])
 
+    const removePlaylist = (id: any) => {
+        let response = removeVideo('allPlaylists', playlists, id)
+        localStorage.removeItem('allPlaylists')
+        localStorage.setItem('allPlaylists', JSON.stringify(response))
+        setPlaylists(JSON.parse(localStorage.getItem('allPlaylists')!))
+    }
+
     const removePlaylistItem = (id: any) => {
-        let response = removeVideo('playlistItems', playlists, id)
+        let response = removeVideo('playlistItems', playlistItems, id)
         setPlaylistItems(response)
         var researched = JSON.parse(localStorage.getItem('researched')!)
         researched.map((r: any) => {
@@ -35,13 +47,14 @@ export default function Playlists() {
         localStorage.setItem('researched', JSON.stringify(researched))
     }
     const handlePlaylists = (id: number) => {
-        playlists.map((playlist: any) => {
+        playlists.map((playlist: any) => {  
             return playlist.id === id ? playlist.active = true : playlist.active = false
         })
         setCurrentAba(id)
         localStorage.setItem('allPlaylists', JSON.stringify(playlists))
         setPlaylists(JSON.parse(localStorage.getItem('allPlaylists')!))
     }
+
     return (
         <>
             <div style={{ background: theme.section, color: theme.font }} className="videos-container">
@@ -55,7 +68,13 @@ export default function Playlists() {
                                             { backgroundColor: theme.sideBar, color: theme.font, borderColor: theme.font }
                                             : { backgroundColor: theme.section, color: theme.font, borderColor: theme.font }}
                                         onClick={() => handlePlaylists(playlist.id)} onDoubleClick={() => setEdit(true)} onBlur={() => setEdit(false)} onKeyPress={(e: any) => e.code === 'Enter' ? alert(e.target.value) : ''} contentEditable={edit} className={'aba'}>
-                                        {playlist.name}
+                                        <div style={{ alignSelf: 'flex-end'}} onClick={() => removePlaylist(playlist.id)}>
+                                            <FontAwesomeIcon
+                                                color={theme.font}
+                                                size={'xs'}
+                                                icon={faWindowClose} />
+                                        </div>
+                                        <span>{playlist.name}</span>
                                     </div>
                                 </>)
                         })}
