@@ -13,7 +13,10 @@ import { Link } from 'react-router-dom';
 
 export default function VideosArea() {
 
-    const [videos, setVideos] = useState<Videos[]>([])
+    const [videos, setVideos] = useState<Videos[]>(
+        localStorage.getItem('researched')
+            ? JSON.parse(localStorage.getItem('researched')!) : []
+    )
     const [keyWord, setKeyWord] = useState('')
     const [next, setNext] = useState('')
     const [back, setBack] = useState('')
@@ -23,7 +26,9 @@ export default function VideosArea() {
         id: '',
         isAdded: false
     })
-    const [playlistNames, setPlaylistNames] = useState<any>([])
+    const [playlistNames, setPlaylistNames] = useState<any>(
+        localStorage.getItem('allPlaylists') ? JSON.parse(localStorage.getItem('allPlaylists')!) : []
+    )
 
     var list: Videos[] = []
 
