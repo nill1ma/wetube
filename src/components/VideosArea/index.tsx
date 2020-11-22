@@ -37,7 +37,7 @@ export default function VideosArea() {
     useEffect(() => {
         var list = JSON.parse(localStorage.getItem('researched') || '[]')
         setVideos(list)
-        setPlaylistNames(JSON.parse(localStorage.getItem('allPlaylists')!))
+        setPlaylistNames(JSON.parse(localStorage.getItem('allPlaylists')!) || '[]')
     }, [])
 
     useEffect(() => {
