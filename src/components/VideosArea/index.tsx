@@ -257,7 +257,7 @@ export default function VideosArea() {
                                         
                                         playlistNames.map((all: any) => {
                                             return <>
-                                                <option value={all.id}> {all.name}</option>
+                                                <option key={all.id} value={all.id}> {all.name}</option>
                                             </>
                                         }) : <></>}
                                     </select>
