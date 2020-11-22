@@ -89,7 +89,7 @@ export default function VideosArea() {
         setNext(nextPageToken)
         if (prevPageToken) setBack(prevPageToken)
         localStorage.setItem('researched', JSON.stringify(list))
-        setVideos(JSON.parse(localStorage.getItem('researched')!))
+        setVideos(Array.from(JSON.parse(localStorage.getItem('researched')!)))
     }
 
     const handleFavorite = (idVideo: string, favoriteVideo: boolean) => {
@@ -252,7 +252,9 @@ export default function VideosArea() {
                                             color: theme.font
                                         }}>
                                         <option value={''}>Choose a Playlist</option>
-                                        {playlistNames && playlistNames.length > 0 ? playlistNames.map((all: any) => {
+                                        {playlistNames && playlistNames.length > 0 ? 
+                                        
+                                        playlistNames.map((all: any) => {
                                             return <>
                                                 <option value={all.id}> {all.name}</option>
                                             </>
