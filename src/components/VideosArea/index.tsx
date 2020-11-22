@@ -26,7 +26,7 @@ export default function VideosArea() {
         id: '',
         isAdded: false
     })
-    const [playlistNames, setPlaylistNames] = useState<any>(
+    const [playlistNames, setPlaylistNames] = useState<any[]>(
         localStorage.getItem('allPlaylists') ? JSON.parse(localStorage.getItem('allPlaylists')!) : []
     )
 
