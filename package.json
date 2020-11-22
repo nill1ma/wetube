@@ -51,7 +51,6 @@
     ]
   },
   "devDependencies": {
-    "@types/react-modal": "^3.10.6",
-    "@types/react-router-dom": "^5.1.6"
+    "@types/react-modal": "^3.10.6"
   }
 }
