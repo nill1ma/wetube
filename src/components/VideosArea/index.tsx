@@ -153,7 +153,7 @@ export default function VideosArea() {
         })
         localStorage.setItem('researched', JSON.stringify(videos))
         setVideos(JSON.parse(localStorage.getItem('researched')!))
-        if(!playlistNames || playlistNames.length < 1) setPlaylistNames([])
+        if (!playlistNames || playlistNames.length < 1) setPlaylistNames([])
     }
 
     const close = () => {
@@ -253,13 +253,14 @@ export default function VideosArea() {
                                             color: theme.font
                                         }}>
                                         <option value="">Choose a Playlist</option>
-                                        {playlistNames && playlistNames.length > 0 ? 
-                                        
-                                        playlistNames.map((all: any) => {
-                                            return <>
-                                                <option key={all.id} value={all.id}> {all.name}</option>
-                                            </>
-                                        }) : <></>}
+                                        {playlistNames && playlistNames.length > 0 ?
+
+                                            Array.from(playlistNames).map((all: any) => {
+                                                return (
+                                                    <option key={all.id} value={all.id}> {all.name}</option>
+                                                )
+
+                                            }) : <></>}
                                     </select>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                                         <button
