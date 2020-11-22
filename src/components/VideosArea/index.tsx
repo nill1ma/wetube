@@ -247,11 +247,11 @@ export default function VideosArea() {
                                             color: theme.font
                                         }}>
                                         <option value={''}>Choose a Playlist</option>
-                                        {playlistNames.map((all: any) => {
+                                        {playlistNames && playlistNames.length > 0 ? playlistNames.map((all: any) => {
                                             return <>
                                                 <option value={all.id}> {all.name}</option>
                                             </>
-                                        })}
+                                        }) : <></>}
                                     </select>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                                         <button
@@ -303,10 +303,10 @@ export default function VideosArea() {
                     <div className="page-token">
                         <div className="buttons">
                             <button style={{ background: 'unset' }} onClick={() => research(back)} >
-                                <FontAwesomeIcon style={{width:'100%', height:'100%'}} color={theme.font} icon={faArrowAltCircleLeft} />
+                                <FontAwesomeIcon style={{ width: '100%', height: '100%' }} color={theme.font} icon={faArrowAltCircleLeft} />
                             </button>
                             <button style={{ background: 'unset' }} onClick={() => research(next)}>
-                                <FontAwesomeIcon style={{width:'100%', height:'100%'}} color={theme.font} icon={faArrowAltCircleRight} />
+                                <FontAwesomeIcon style={{ width: '100%', height: '100%' }} color={theme.font} icon={faArrowAltCircleRight} />
                             </button>
                         </div>
                     </div>
