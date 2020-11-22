@@ -252,7 +252,7 @@ export default function VideosArea() {
                                             backgroundColor: theme.section,
                                             color: theme.font
                                         }}>
-                                        <option value={''}>Choose a Playlist</option>
+                                        <option value="">Choose a Playlist</option>
                                         {playlistNames && playlistNames.length > 0 ? 
                                         
                                         playlistNames.map((all: any) => {
