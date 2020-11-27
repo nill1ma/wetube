@@ -10,13 +10,7 @@ import './styles.scss';
 export default function Playlists() {
 
     const [paagination, setPagination] = useState([0, 6])
-    const [playlists, setPlaylists] = useState<any>([
-        {
-            id: 0,
-            actvive: false,
-            name: ''
-        }
-    ])
+    const [playlists, setPlaylists] = useState([{ id: 0, actvive: false, name: '' }])
     const [playlistItems, setPlaylistItems] = useState([{ playlistId: 0, title: '', id: '' }])
     const [theme] = useContext(ThemeContext)
     const [edit, setEdit] = useState(false)
@@ -30,12 +24,10 @@ export default function Playlists() {
         setPlaylistItems(Array.from(list))
     }, [])
 
-    const removePlaylist = (id: any) => {
-        let response = removeVideo('allPlaylists', playlists, id)
-        localStorage.removeItem('allPlaylists')
-        localStorage.setItem('allPlaylists', JSON.stringify(response))
-        setPlaylists(JSON.parse(localStorage.getItem('allPlaylists')!))
-    }
+    useEffect(() => {
+        localStorage.setItem('playlistItems', JSON.stringify(playlistItems))
+        localStorage.setItem('allPlaylists', JSON.stringify(playlists))
+    }, [playlists])
 
     const removePlaylistItem = (id: any) => {
         let response = removeVideo('playlistItems', playlistItems, id)
@@ -47,7 +39,7 @@ export default function Playlists() {
         localStorage.setItem('researched', JSON.stringify(researched))
     }
     const handlePlaylists = (id: number) => {
-        playlists.map((playlist: any) => {  
+        playlists.map((playlist: any) => {
             return playlist.id === id ? playlist.active = true : playlist.active = false
         })
         setCurrentAba(id)
@@ -60,15 +52,20 @@ export default function Playlists() {
             <div style={{ background: theme.section, color: theme.font }} className="videos-container">
                 <div className="header-playlist">
                     <div className={'abas-area'}>
-                        {playlists.map((playlist: any) => {
+                        {playlists.map((playlist: any, index: number) => {
                             return (
                                 <>
                                     <div
+                                        key={playlist.id}
                                         style={playlist.active === true ?
                                             { backgroundColor: theme.sideBar, color: theme.font, borderColor: theme.font }
                                             : { backgroundColor: theme.section, color: theme.font, borderColor: theme.font }}
-                                        onClick={() => handlePlaylists(playlist.id)} onDoubleClick={() => setEdit(true)} onBlur={() => setEdit(false)} onKeyPress={(e: any) => e.code === 'Enter' ? alert(e.target.value) : ''} contentEditable={edit} className={'aba'}>
-                                        <div style={{ alignSelf: 'flex-end'}} onClick={() => removePlaylist(playlist.id)}>
+                                        onClick={() => handlePlaylists(playlist.id)} onDoubleClick={() => setEdit(true)}
+                                        onBlur={() => setEdit(false)}
+                                        onKeyPress={(e: any) => e.code === 'Enter' ? alert(e.target.value) : ''}
+                                        contentEditable={edit} className={'aba'}>
+                                        <div style={{ alignSelf: 'flex-end' }}
+                                            onClick={() => { setPlaylistItems(playlistItems.filter((p) => playlist.id !== p.playlistId)); setPlaylists(playlists.splice(index, 1)) }}>
                                             <FontAwesomeIcon
                                                 color={theme.font}
                                                 size={'xs'}

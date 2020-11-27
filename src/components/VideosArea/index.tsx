@@ -153,7 +153,6 @@ export default function VideosArea() {
         })
         localStorage.setItem('researched', JSON.stringify(videos))
         setVideos(JSON.parse(localStorage.getItem('researched')!))
-        if (!playlistNames || playlistNames.length < 1) setPlaylistNames([])
     }
 
     const close = () => {
