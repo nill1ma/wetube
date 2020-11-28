@@ -202,7 +202,7 @@ export default function VideosArea() {
                                         textColor={'#2C2C2C'}
                                         border={true}
                                         borderColor={'#2C2C2C'}
-                                        place={'bottom'}
+                                        place={'right'}
                                         getContent={() => video.title}
                                     />
                                 </div>

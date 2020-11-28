@@ -4,14 +4,16 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import YouTube from 'react-youtube';
 import ThemeContext from '../../../context';
-import { removeVideo } from '../../../services/Util';
+import { IPlaylistItems } from '../../../interfaces/IPlaylistItems';
+import { IPlaylists } from '../../../interfaces/IPlaylists';
+import { removeVideo, updateResearchedIconPLaylist } from '../../../services/Util';
 import './styles.scss';
 
 export default function Playlists() {
 
     const [paagination, setPagination] = useState([0, 6])
-    const [playlists, setPlaylists] = useState([{ id: 0, actvive: false, name: '' }])
-    const [playlistItems, setPlaylistItems] = useState([{ playlistId: 0, title: '', id: '' }])
+    const [playlists, setPlaylists] = useState<IPlaylists[]>([])
+    const [playlistItems, setPlaylistItems] = useState<IPlaylistItems[]>([])
     const [theme] = useContext(ThemeContext)
     const [edit, setEdit] = useState(false)
     const [currentAba, setCurrentAba] = useState(0)
@@ -27,16 +29,14 @@ export default function Playlists() {
     useEffect(() => {
         localStorage.setItem('playlistItems', JSON.stringify(playlistItems))
         localStorage.setItem('allPlaylists', JSON.stringify(playlists))
-    }, [playlists])
+        if (playlists.length > 0 && playlists[0].name !== '') setCurrentAba(playlists[0].id)
 
-    const removePlaylistItem = (id: any) => {
+    }, [playlists, playlistItems])
+
+    const removePlaylistItem = (id: string) => {
         let response = removeVideo('playlistItems', playlistItems, id)
         setPlaylistItems(response)
-        var researched = JSON.parse(localStorage.getItem('researched')!)
-        researched.map((r: any) => {
-            if (r.id === id) { r.playlist = false; r.fcolor = colorTag[1] }
-        })
-        localStorage.setItem('researched', JSON.stringify(researched))
+        updateResearchedIconPLaylist(id, colorTag[1])    
     }
     const handlePlaylists = (id: number) => {
         playlists.map((playlist: any) => {
@@ -45,6 +45,13 @@ export default function Playlists() {
         setCurrentAba(id)
         localStorage.setItem('allPlaylists', JSON.stringify(playlists))
         setPlaylists(JSON.parse(localStorage.getItem('allPlaylists')!))
+    }
+
+    const handleRemovePlaylist = (id: number, index: number) => {
+        const pItems = playlistItems.find((p) => id === p.playlistId)
+        setPlaylistItems(playlistItems.filter((p) => id !== p.playlistId));
+        setPlaylists(playlists.splice(index, 1))
+        if(pItems) updateResearchedIconPLaylist(pItems.id, colorTag[1])
     }
 
     return (
@@ -65,7 +72,7 @@ export default function Playlists() {
                                         onKeyPress={(e: any) => e.code === 'Enter' ? alert(e.target.value) : ''}
                                         contentEditable={edit} className={'aba'}>
                                         <div style={{ alignSelf: 'flex-end' }}
-                                            onClick={() => { setPlaylistItems(playlistItems.filter((p) => playlist.id !== p.playlistId)); setPlaylists(playlists.splice(index, 1)) }}>
+                                            onClick={() => handleRemovePlaylist(playlist.id, index)}>
                                             <FontAwesomeIcon
                                                 color={theme.font}
                                                 size={'xs'}

@@ -4,19 +4,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import YouTube from 'react-youtube';
 import ThemeContext from '../../../context';
 import { removeVideo } from '../../../services/Util'
+import { IFavorites } from '../../../interfaces/IFavorites';
 import './styles.scss'
 
 export default function Favorites() {
 
     const [keyWord, setKeyWord] = useState('')
     const [paagination, setPagination] = useState([0, 6])
-    const [favorites, setFavorites] = useState([{ title: '', id: '' }])
+    const [favorites, setFavorites] = useState<IFavorites[]>([])
     const [theme] = useContext(ThemeContext)
     const colorTag = ['rgb(255, 140, 0)', 'rgba(255, 255, 255, 0.5)']
 
     useEffect(() => {
         let list = JSON.parse(localStorage.getItem('favorites') || '[]')
-
         setFavorites(Array.from(list))
     }, [])
 
@@ -66,7 +66,6 @@ export default function Favorites() {
                 <div className="section">
                     {favorites && favorites.length > 0 ? favorites.slice(paagination[0], paagination[1]).map((video) => {
                         return (
-
                             <div key={video.id} className="video-box">
                                 <div className="actions">
                                     <div className="icons-box">
@@ -79,7 +78,6 @@ export default function Favorites() {
                                     videoId={`${video.id}`} />
                                 <span>{video.title.substring(0, 35)}{video.title.length > 35 ? '...' : ''}</span>
                             </div>
-
                         )
                     }) : (
                             <div className={'empity-message'}>
