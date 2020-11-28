@@ -32,7 +32,7 @@ export default function VideosArea() {
     )
 
     var list: Videos[] = []
-    var allPlaylists = Array.from(JSON.parse(localStorage.getItem('allPlaylists')!)) || '[]'
+    var allPlaylists = localStorage.getItem('allPlaylists') ? Array.from(JSON.parse(localStorage.getItem('allPlaylists')!)) : []
 
     const colorTag = [
         'rgb(255, 140, 0)',
@@ -295,7 +295,7 @@ export default function VideosArea() {
                                                 cursor: !isDisabled ? 'pointer' : '',
                                                 fontWeight: 'bold',
                                                 color: !isDisabled ? theme.font : 'rgba(255,255,255,0.3)',
-                                                backgroundColor: !isDisabled ?'#1a2eff' : 'rgba(255,255,255,0.1)',
+                                                backgroundColor: !isDisabled ? '#1a2eff' : 'rgba(255,255,255,0.1)',
                                                 width: '45%',
                                                 padding: '10px',
                                                 display: 'flex',
