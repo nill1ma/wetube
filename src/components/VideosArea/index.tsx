@@ -26,11 +26,13 @@ export default function VideosArea() {
         id: '',
         isAdded: false
     })
+    const [isDisabled, setIsDisabled] = useState(false)
     const [playlistNames, setPlaylistNames] = useState<any[]>(
         localStorage.getItem('allPlaylists') ? JSON.parse(localStorage.getItem('allPlaylists')!) : []
     )
 
     var list: Videos[] = []
+    var allPlaylists = Array.from(JSON.parse(localStorage.getItem('allPlaylists')!)) || '[]'
 
     const colorTag = [
         'rgb(255, 140, 0)',
@@ -46,7 +48,8 @@ export default function VideosArea() {
     }, [])
 
     useEffect(() => {
-        if (isOpen) setPlaylistId(playlistNames[0].id)
+        if (isOpen && (allPlaylists && allPlaylists.length > 0)) { setPlaylistId(playlistNames[0].id); setIsDisabled(false) }
+        else { setIsDisabled(true) }
     }, [isOpen])
 
     const is = (field: string, id: string) => {
@@ -130,6 +133,10 @@ export default function VideosArea() {
 
     }
 
+    const handleNewPlaylistVideo = (id: string, isAdded: boolean) => {
+        setNewPlaylistVideo({ id: id, isAdded: isAdded })
+        setIsOpen(true)
+    }
     const setLocalStorage = (field: string, value: any) => {
         let list = JSON.parse(localStorage.getItem(field) || '[]')
 
@@ -183,7 +190,7 @@ export default function VideosArea() {
                                 <div key={video.id} className="video-box">
                                     <div className="actions">
                                         <div className="icons-box">
-                                            <FontAwesomeIcon onClick={() => { setNewPlaylistVideo({ id: video.id, isAdded: !video.playlist }); setIsOpen(true) }} color={video.playlist ? theme.activeIcon : theme.unactiveIcon} icon={faFolderPlus} />
+                                            <FontAwesomeIcon onClick={() => { handleNewPlaylistVideo(video.id, !video.playlist) }} color={video.playlist ? theme.activeIcon : theme.unactiveIcon} icon={faFolderPlus} />
                                             <FontAwesomeIcon onClick={() => handleFavorite(video.id, !video.favorite)} color={video.favorite ? theme.activeIcon : theme.unactiveIcon} icon={faStar} />
                                         </div>
                                     </div>
@@ -280,14 +287,15 @@ export default function VideosArea() {
                                                 outline: 'none'
                                             }}>Cancel</button>
                                         <button
+                                            disabled={isDisabled}
                                             onClick={() => handlePlayList(newPlaylistVideo.id, newPlaylistVideo.isAdded)}
                                             style={{
                                                 marginTop: '10px',
                                                 borderRadius: '2px',
-                                                cursor: 'pointer',
+                                                cursor: !isDisabled ? 'pointer' : '',
                                                 fontWeight: 'bold',
-                                                color: theme.font,
-                                                backgroundColor: '#1a2eff',
+                                                color: !isDisabled ? theme.font : 'rgba(255,255,255,0.3)',
+                                                backgroundColor: !isDisabled ?'#1a2eff' : 'rgba(255,255,255,0.1)',
                                                 width: '45%',
                                                 padding: '10px',
                                                 display: 'flex',
