@@ -1,76 +1,63 @@
-.videos-container{
+.videos-container {
     padding: 0;
     overflow: hidden;
     display: flex;
     flex-wrap: wrap;
     width: 80vw;
     height: 100vh;
-    .section{
+    .section {
         width: 100%;
         padding: 0 0 0 20px;
         display: flex;
         flex-wrap: wrap;
         height: 80vh;
-        .video-box{
+        .video-box {
             width: 30%;
             height: 30%;
             flex-direction: column;
             margin: 0 10px;
-            .tooltip{
-                color: #2C2C2C;
-                font-weight: bolder;
-                max-width: 20vw;
-            }
-            .actions{
+            
+            .actions {
                 display: flex;
+                align-items: center;
+                justify-content: space-between;
                 width: 100%;
-                .icons-box{
-                    padding-bottom: 5px;
-                    width: 18%;
-                    justify-content: space-between;
-                    display: flex;
+                .icons-box {
                     cursor: pointer;
                 }
             }
-            .youtube{
-                width: 100%;
-                height: 100%;
-            }
-            span{                
-                font-size: 1vw;
-            }
         }
-        .empity-message{
+        .empity-message {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             width: 100%;
-            span{
-                margin-top: 10px;                
-                font-size: 25px ;
+            span {
+                margin-top: 10px;
+                font-size: 25px;
             }
         }
     }
-    .header{
+    .header {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
         height: 10vh;
         padding-top: 20px;
-        .input-area{
+        .input-area {
             display: flex;
             width: 70%;
             border-bottom: 1px solid #fff;
-            .icon{
+            .icon {
                 padding: 10px 20px;
-                background-color: rgba(255,255,255, 0.5);
-                border:none;
+                background-color: rgba(255, 255, 255, 0.5);
+                border: none;
                 outline: none;
                 cursor: pointer !important;
             }
-            input{
+            input {
                 font-size: 18px;
                 padding: 0 10px;
                 border: 0;
@@ -79,23 +66,23 @@
             }
         }
     }
-    .page-token{
+    .page-token {
         width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        .buttons{
-            padding-bottom:15px;
+        .buttons {
+            padding-bottom: 15px;
             display: flex;
             justify-content: space-between;
             width: 8%;
-            button{
-                background-color: #2C2C2C;
-                border:none;
+            button {
+                background-color: #2c2c2c;
+                border: none;
                 outline: none;
                 display: flex;
                 justify-content: space-between;
-                cursor: pointer;                
+                cursor: pointer;
             }
         }
     }

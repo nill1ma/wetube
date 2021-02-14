@@ -15,3 +15,12 @@ export const updateResearchedIconPLaylist = (id: string, colorTag: string) => {
     })
     localStorage.setItem('researched', JSON.stringify(researched))
 }
+
+export const setGenericStorage = (list: any, localStorageName: string) => {
+    localStorage.setItem(localStorageName, JSON.stringify(list))
+    return JSON.parse(localStorage.getItem(localStorageName)!)
+}
+
+export const getStorage = (localStorageName: string) => {
+    return JSON.parse(localStorage.getItem(localStorageName)! || '[]')
+}

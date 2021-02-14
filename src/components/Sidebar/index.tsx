@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import './styles.scss'
-import { faHome, faStar, faCogs, faTasks } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faStar, faTasks } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import logo from '../../assets/logo-wetube.png'
 import { Link } from 'react-router-dom';
@@ -10,8 +10,8 @@ import Theme from '../Theme';
 const menu = [
     { title: 'Home', icon: faHome, isize: 'lg', link: '/' },
     { title: 'Favorite', icon: faStar, isize: 'lg', link: 'favorites'},
-    { title: 'Playlists', icon: faTasks, isize: 'lg', link: 'create' },
-    { title: 'Settings', icon: faCogs, isize: 'lg', link: '/' }
+    { title: 'Playlists', icon: faTasks, isize: 'lg', link: 'create' }
+    // { title: 'Settings', icon: faCogs, isize: 'lg', link: '/' }
 ]
 
 export default function Sidebar() {

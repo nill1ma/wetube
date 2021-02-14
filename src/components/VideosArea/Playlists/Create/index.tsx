@@ -4,25 +4,22 @@ import React, { useContext, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import ThemeContext from '../../../../context'
 import './styles.scss'
-import { redirect } from '../../../../services/Util'
+import { getStorage, redirect, setGenericStorage } from '../../../../services/Util'
+import { IPlaylists } from '../../../../interfaces/IPlaylists'
 
 
 export default function Create() {
-    const [allPlaylists, setAllPlaylists] = useState<any>({
+    const [allPlaylists, setAllPlaylists] = useState<IPlaylists>({
         id: 0,
-        actvive: false,
+        active: false,
         name: ''
     })
     const [theme] = useContext(ThemeContext)
     let history = useHistory();
 
     const createANewPlaylist = () => {
-        let l: string[] = []
-        l = [...JSON.parse(localStorage.getItem('allPlaylists')!) || []]
-        l.push(allPlaylists)
-        localStorage.setItem('allPlaylists', JSON.stringify(l))
+        setGenericStorage([...getStorage('allPlaylists'), allPlaylists], 'allPlaylists')
         redirect(history, 'playlists')
-
     }
     return (
         <>

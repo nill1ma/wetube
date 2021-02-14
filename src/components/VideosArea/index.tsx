@@ -1,38 +1,35 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { faSearch, faStar, faFolderPlus, faArrowAltCircleLeft, faArrowAltCircleRight, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import ReactTooltip from "react-tooltip"
-import Modal from "react-modal"
-import { Videos } from '../../interfaces/Videos'
-import './styles.scss'
-import { search } from '../../services/YoutubeApi'
-import YouTube from 'react-youtube';
-import ThemeContext from '../../context';
-import { removeVideo } from '../../services/Util'
+import { faArrowAltCircleLeft, faArrowAltCircleRight, faFolderPlus, faInfoCircle, faSearch, faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useContext, useEffect, useState } from 'react';
+import Modal from "react-modal";
 import { Link } from 'react-router-dom';
+import ThemeContext from '../../context';
+import { IPlaylists } from "../../interfaces/IPlaylists";
+import { Videos } from '../../interfaces/Videos';
+import { getStorage, removeVideo } from '../../services/Util';
+import { search } from '../../services/YoutubeApi';
+import Actions from './Item/Actions';
+import VideoBox from './Item/VideoBox';
+import './styles.scss';
 
 export default function VideosArea() {
 
-    const [videos, setVideos] = useState<Videos[]>(
-        localStorage.getItem('researched')
-            ? JSON.parse(localStorage.getItem('researched')!) : []
-    )
+    const [videos, setVideos] = useState<Videos[]>(getStorage('researched'))
     const [keyWord, setKeyWord] = useState('')
     const [next, setNext] = useState('')
     const [back, setBack] = useState('')
     const [theme] = useContext(ThemeContext)
-    const [playlistId, setPlaylistId] = useState(0)
+    const [playlistSelected, setPlaylistSelected] = useState({
+        name: '',
+        id: 0
+    })
     const [newPlaylistVideo, setNewPlaylistVideo] = useState({
         id: '',
         isAdded: false
     })
     const [isDisabled, setIsDisabled] = useState(false)
-    const [playlistNames, setPlaylistNames] = useState<any[]>(
-        localStorage.getItem('allPlaylists') ? JSON.parse(localStorage.getItem('allPlaylists')!) : []
-    )
-
+    const [playlistNames, setPlaylistNames] = useState<IPlaylists[]>(getStorage('allPlaylists'))
     var list: Videos[] = []
-    var allPlaylists = localStorage.getItem('allPlaylists') ? Array.from(JSON.parse(localStorage.getItem('allPlaylists')!)) : []
 
     const colorTag = [
         'rgb(255, 140, 0)',
@@ -48,7 +45,7 @@ export default function VideosArea() {
     }, [])
 
     useEffect(() => {
-        if (isOpen && (allPlaylists && allPlaylists.length > 0)) { setPlaylistId(playlistNames[0].id); setIsDisabled(false) }
+        if (isOpen && (getStorage('allPlaylists') && getStorage('allPlaylists').length > 0)) { setPlaylistSelected({ name: playlistNames[0].name, id: playlistNames[0].id }); setIsDisabled(false) }
         else { setIsDisabled(true) }
     }, [isOpen])
 
@@ -99,9 +96,8 @@ export default function VideosArea() {
         videos.map((video) => {
             if (video.id === idVideo) {
                 video.favorite = favoriteVideo;
-                video.favorite ?
-                    video.fcolor = colorTag[0]
-                    : video.fcolor = colorTag[1];
+                video.fcolor = video.favorite ? colorTag[0] : colorTag[1]
+
                 setLocalStorage('favorites', video)
             }
         })
@@ -122,7 +118,7 @@ export default function VideosArea() {
                         pcolor: video.pcolor,
                         playlist: video.playlist,
                         title: video.title,
-                        playlistId: playlistId
+                        playlistId: playlistSelected.id
                     }
                     setLocalStorage('playlistItems', value)
                     setIsOpen(false)
@@ -130,7 +126,6 @@ export default function VideosArea() {
             })
             setVideos([...videos])
         }
-
     }
 
     const handleNewPlaylistVideo = (id: string, isAdded: boolean) => {
@@ -142,19 +137,17 @@ export default function VideosArea() {
 
         let color = ''
         field === 'favorites' ? color = 'fcolor' : color = 'pcolor'
-        let remove = list.find((l: any) => { return l.id === value.id })
-        if (remove) {
+        let remove = list.find((l: any) => l.id === value.id)
+        if (remove)
             list = removeVideo(field, JSON.parse(localStorage.getItem(field)!), remove.id);
-        } else { list.push(value) }
 
-        localStorage.setItem(field, JSON.stringify(list))
+        localStorage.setItem(field, JSON.stringify([...list, value]))
 
-        videos.forEach((video: any) => {
+        videos.map((video: any) => {
             if (video.id === value.id) {
                 if (remove) {
-                    video[field] = false; video[color] = theme.unactiveColor
-                } else {
-                    video[field] = true; video[color] = theme.activeColor
+                    video[field] = !remove;
+                    video[color] = remove ? theme.unactiveColor : theme.activeColor
                 }
             }
         })
@@ -188,30 +181,14 @@ export default function VideosArea() {
                         return (
                             <>
                                 <div key={video.id} className="video-box">
+                                    <VideoBox video={video} />
                                     <div className="actions">
+                                        <Actions video={video}/>
                                         <div className="icons-box">
-                                            <FontAwesomeIcon onClick={() => { handleNewPlaylistVideo(video.id, !video.playlist) }} color={video.playlist ? theme.activeIcon : theme.unactiveIcon} icon={faFolderPlus} />
+                                            <FontAwesomeIcon style={{marginRight:'10px'}} onClick={() => { handleNewPlaylistVideo(video.id, !video.playlist) }} color={video.playlist ? theme.activeIcon : theme.unactiveIcon} icon={faFolderPlus} />
                                             <FontAwesomeIcon onClick={() => handleFavorite(video.id, !video.favorite)} color={video.favorite ? theme.activeIcon : theme.unactiveIcon} icon={faStar} />
                                         </div>
                                     </div>
-                                    <YouTube
-                                        opts={{ height: '180', width: '100%' }}
-                                        id={`${video.id}`}
-                                        videoId={`${video.id}`} />
-                                    <span data-tip data-for={video.id}>{
-                                        video.title.substring(0, 35)}
-                                        {video.title.length > 35 ? '...' : ''}
-                                    </span>
-                                    <ReactTooltip
-                                        id={video.id}
-                                        className={'tooltip'}
-                                        type={'info'}
-                                        textColor={'#2C2C2C'}
-                                        border={true}
-                                        borderColor={'#2C2C2C'}
-                                        place={'right'}
-                                        getContent={() => video.title}
-                                    />
                                 </div>
                                 <Modal
                                     isOpen={isOpen}
@@ -247,7 +224,7 @@ export default function VideosArea() {
                                         </Link>
                                     </span>
                                     <select
-                                        onChange={(e) => setPlaylistId(Number(e.target.value))}
+                                        onChange={(e) => setPlaylistSelected(JSON.parse(e.target.value))}
                                         style={{
                                             marginTop: '10px',
                                             width: '100%',
@@ -258,14 +235,12 @@ export default function VideosArea() {
                                             backgroundColor: theme.section,
                                             color: theme.font
                                         }}>
-                                        <option value="">Choose a Playlist</option>
+                                        <option value="" selected={playlistSelected && playlistSelected.name === ''}>Choose a Playlist</option>
                                         {playlistNames && playlistNames.length > 0 ?
-
                                             Array.from(playlistNames).map((all: any) => {
                                                 return (
-                                                    <option key={all.id} value={all.id}> {all.name}</option>
+                                                    <option key={all.id} value={JSON.stringify(all)}> {all.name}</option>
                                                 )
-
                                             }) : <></>}
                                     </select>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
@@ -309,11 +284,11 @@ export default function VideosArea() {
                             </>
                         )
                     }) : (
-                            <div className={'empity-message'}>
-                                <FontAwesomeIcon color={'#1A2EFF'} size={'2x'} icon={faInfoCircle} />
-                                <span>You have to search to get results</span>
-                            </div>
-                        )}
+                        <div className={'empity-message'}>
+                            <FontAwesomeIcon color={'#1A2EFF'} size={'2x'} icon={faInfoCircle} />
+                            <span>You have to search to get results</span>
+                        </div>
+                    )}
                 </div>
                 {videos && videos.length > 0 ? (
                     <div className="page-token">
