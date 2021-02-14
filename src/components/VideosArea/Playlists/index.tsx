@@ -18,12 +18,8 @@ export default function Playlists() {
     const [playlistItems, setPlaylistItems] = useState<IPlaylistItems[]>(getStorage('playlistItems'))
     const [theme] = useContext(ThemeContext)
     const [edit, setEdit] = useState(false)
-    const [currentAba, setCurrentAba] = useState(0)
+    const [currentAba, setCurrentAba] = useState(playlists && playlists.length > 0 ? playlists[0].id : 0)
     const colorTag = ['rgb(255, 140, 0)', 'rgba(255, 255, 255, 0.5)']
-
-    useEffect(() => {
-        setCurrentAba(playlists ? playlists[0].id : 0)
-    }, [])
 
     const removePlaylistItem = (id: string) => {
         let response = removeVideo('playlistItems', playlistItems, id)
@@ -55,7 +51,7 @@ export default function Playlists() {
             <div style={{ background: theme.section, color: theme.font }} className="videos-container">
                 <div className="header-playlist">
                     <div className={'abas-area'}>
-                        {playlists.map((playlist: IPlaylists, index: number) => {
+                        {currentAba && currentAba !== 0 ?playlists.map((playlist: IPlaylists, index: number) => {
                             return (
                                 <>
                                     <div
@@ -91,7 +87,7 @@ export default function Playlists() {
                                         />
                                     </div>
                                 </>)
-                        })}
+                        }): <></>}
                     </div>
                     <Link to={'create'} className="add">
                         <FontAwesomeIcon className={'icon'} color={theme.font} size={'2x'} icon={faPlusCircle} />
@@ -99,7 +95,7 @@ export default function Playlists() {
                     </Link>
                 </div>
                 <div className="section">
-                    {playlistItems && playlistItems.length > 0 ? playlistItems.filter((video) => currentAba === video.playlistId).slice(paagination[0], paagination[1]).map((video) => {
+                    {currentAba && currentAba !== 0 ? playlistItems.filter((video) => currentAba === video.playlistId).slice(paagination[0], paagination[1]).map((video) => {
                         return (
                             <div key={video.id} className="video-box">
                                 <VideoBox video={video} />
