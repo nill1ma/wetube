@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import ThemeContext from '../../context';
 import { IPlaylists } from "../../interfaces/IPlaylists";
 import { Videos } from '../../interfaces/Videos';
-import { getStorage, removeVideo } from '../../services/Util';
+import { getStorage, removeVideo, setGenericStorage } from '../../services/Util';
 import { search } from '../../services/YoutubeApi';
 import Actions from './Item/Actions';
 import VideoBox from './Item/VideoBox';
@@ -39,9 +39,8 @@ export default function VideosArea() {
     const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
-        var list = JSON.parse(localStorage.getItem('researched') || '[]')
-        setVideos(list)
-        setPlaylistNames(JSON.parse(localStorage.getItem('allPlaylists')!) || '[]')
+        setVideos(getStorage('researched'))
+        setPlaylistNames(getStorage(('allPlaylists')))
     }, [])
 
     useEffect(() => {
@@ -88,8 +87,8 @@ export default function VideosArea() {
         list = await mount(response)
         setNext(nextPageToken)
         if (prevPageToken) setBack(prevPageToken)
-        localStorage.setItem('researched', JSON.stringify(list))
-        setVideos(Array.from(JSON.parse(localStorage.getItem('researched')!)))
+        setGenericStorage(list, 'researched')
+        setVideos(Array.from(getStorage('researched')))
     }
 
     const handleFavorite = (idVideo: string, favoriteVideo: boolean) => {
@@ -183,9 +182,9 @@ export default function VideosArea() {
                                 <div key={video.id} className="video-box">
                                     <VideoBox video={video} />
                                     <div className="actions">
-                                        <Actions video={video}/>
+                                        <Actions video={video} />
                                         <div className="icons-box">
-                                            <FontAwesomeIcon style={{marginRight:'10px'}} onClick={() => { handleNewPlaylistVideo(video.id, !video.playlist) }} color={video.playlist ? theme.activeIcon : theme.unactiveIcon} icon={faFolderPlus} />
+                                            <FontAwesomeIcon style={{ marginRight: '10px' }} onClick={() => { handleNewPlaylistVideo(video.id, !video.playlist) }} color={video.playlist ? theme.activeIcon : theme.unactiveIcon} icon={faFolderPlus} />
                                             <FontAwesomeIcon onClick={() => handleFavorite(video.id, !video.favorite)} color={video.favorite ? theme.activeIcon : theme.unactiveIcon} icon={faStar} />
                                         </div>
                                     </div>
@@ -284,11 +283,11 @@ export default function VideosArea() {
                             </>
                         )
                     }) : (
-                        <div className={'empity-message'}>
-                            <FontAwesomeIcon color={'#1A2EFF'} size={'2x'} icon={faInfoCircle} />
-                            <span>You have to search to get results</span>
-                        </div>
-                    )}
+                            <div className={'empity-message'}>
+                                <FontAwesomeIcon color={'#1A2EFF'} size={'2x'} icon={faInfoCircle} />
+                                <span>You have to search to get results</span>
+                            </div>
+                        )}
                 </div>
                 {videos && videos.length > 0 ? (
                     <div className="page-token">
