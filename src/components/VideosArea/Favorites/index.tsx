@@ -4,8 +4,9 @@ import React, { useContext, useState } from 'react';
 import ThemeContext from '../../../context';
 import { IFavorites } from '../../../interfaces/IFavorites';
 import { getStorage, removeVideo, setGenericStorage } from '../../../services/Util';
-import Actions from '../Item/Actions';
-import VideoBox from '../Item/VideoBox';
+import Actions from '../../shared/Actions';
+import Header from '../../shared/Header';
+import VideoBox from '../../shared/VideoBox';
 import './styles.scss';
 
 export default function Favorites() {
@@ -34,10 +35,10 @@ export default function Favorites() {
         let list = getStorage('favorites')
         if (keyWord !== '') {
             setPagination([0, 6])
-            const fvrts = list.filter((favorite: any) => {
+            const updatedFavorites = list.filter((favorite: any) => {
                 return favorite.title.toUpperCase().includes(keyWord.toUpperCase())
             })
-            return setFavorites(fvrts)
+            return setFavorites(updatedFavorites)
         }
         setFavorites(list)
     }
@@ -45,31 +46,20 @@ export default function Favorites() {
     return (
         <>
             <div style={{ background: theme.section, color: theme.font }} className="videos-container">
-                <div className="header">
-                    <div className={'input-area'}>
-                        <input style={{ background: theme.section, color: theme.font }}
-                            placeholder={'Type your favorite title to find...'}
-                            name='research'
-                            value={keyWord}
-                            onKeyPress={(e) => getSearchFavorites(e)}
-                            onChange={(e) => setKeyWord(e.target.value)}
-                            type="text" />
-                        <button onClick={() => searchFavorites()} className="icon">
-                            <FontAwesomeIcon size={'lg'} color={'#2C2C2C'} rotation={90} icon={faSearch} />
-                        </button>
-                    </div>
-                </div>
+                <Header
+                    keyWord={keyWord}
+                    getResearch={getSearchFavorites}
+                    setKeyWord={setKeyWord}
+                    research={searchFavorites}
+                    theme={theme}
+                />
                 <div className="section">
                     {favorites && favorites.length > 0 ? favorites.slice(paagination[0], paagination[1]).map((video) => {
                         return (
                             <div key={video.id} className="video-box">
-                                <VideoBox video={video} />
-                                <div className="actions">
-                                    <Actions video={video} />
-                                    <div className="icons-box">
-                                        <FontAwesomeIcon onClick={() => removeFavorite(video.id)} icon={faTrashAlt} />
-                                    </div>
-                                </div>
+                                <VideoBox main={false} video={video} actions={
+                                    [{ function: removeFavorite, icon: faTrashAlt }]}
+                                />
                             </div>
                         )
                     }) : (

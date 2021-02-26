@@ -12,8 +12,9 @@ export const updateResearchedIconPLaylist = (id: string, colorTag: string) => {
     var researched = JSON.parse(localStorage.getItem('researched')!)
     researched.map((r: any) => {
         if (r.id === id) r.playlist = false; r.fcolor = colorTag
+        return r
     })
-    localStorage.setItem('researched', JSON.stringify(researched))
+    setGenericStorage(researched, 'researched')
 }
 
 export const setGenericStorage = (list: any, localStorageName: string) => {

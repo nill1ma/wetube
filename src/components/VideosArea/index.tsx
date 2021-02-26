@@ -6,10 +6,11 @@ import { Link } from 'react-router-dom';
 import ThemeContext from '../../context';
 import { IPlaylists } from "../../interfaces/IPlaylists";
 import { Videos } from '../../interfaces/Videos';
-import { getStorage, removeVideo } from '../../services/Util';
+import { getStorage, removeVideo, setGenericStorage } from '../../services/Util';
 import { search } from '../../services/YoutubeApi';
-import Actions from './Item/Actions';
-import VideoBox from './Item/VideoBox';
+import Header from "../shared/Header";
+import Actions from '../shared/Actions';
+import VideoBox from '../shared/VideoBox';
 import './styles.scss';
 
 export default function VideosArea() {
@@ -39,17 +40,20 @@ export default function VideosArea() {
     const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
-        var list = JSON.parse(localStorage.getItem('researched') || '[]')
+        var list = getStorage('researched')
         setVideos(list)
-        setPlaylistNames(JSON.parse(localStorage.getItem('allPlaylists')!) || '[]')
+        setPlaylistNames(getStorage('allPlaylists'))
     }, [])
 
     useEffect(() => {
-        if (isOpen && (getStorage('allPlaylists') && getStorage('allPlaylists').length > 0)) { setPlaylistSelected({ name: playlistNames[0].name, id: playlistNames[0].id }); setIsDisabled(false) }
+        if (isOpen && (getStorage('allPlaylists') && getStorage('allPlaylists').length > 0)) {
+            setPlaylistSelected({ name: playlistNames[0].name, id: playlistNames[0].id })
+            setIsDisabled(false)
+        }
         else { setIsDisabled(true) }
     }, [isOpen])
 
-    const is = (field: string, id: string) => {
+    const isFavoriteOrPlylist = (field: string, id: string) => {
         var is: any
         if (localStorage.getItem(field)) {
             let f = Array.from(JSON.parse(localStorage.getItem(field)!))
@@ -70,10 +74,10 @@ export default function VideosArea() {
             let obj = {
                 title: item.snippet.title,
                 id: item.id.videoId,
-                favorite: is('favorites', item.id.videoId) ? true : false,
-                fcolor: is('favorites', item.id.videoId) ? theme.activeIcon : theme.unactiveIcon,
-                playlist: is('playlistItems', item.id.videoId) ? true : false,
-                pcolor: is('playlistItems', item.id.videoId) ? theme.activeIcon : theme.unactiveIcon,
+                favorite: isFavoriteOrPlylist('favorites', item.id.videoId) ? true : false,
+                fcolor: isFavoriteOrPlylist('favorites', item.id.videoId) ? theme.activeIcon : theme.unactiveIcon,
+                playlist: isFavoriteOrPlylist('playlistItems', item.id.videoId) ? true : false,
+                pcolor: isFavoriteOrPlylist('playlistItems', item.id.videoId) ? theme.activeIcon : theme.unactiveIcon,
             }
             list.push(obj)
         })
@@ -95,11 +99,11 @@ export default function VideosArea() {
     const handleFavorite = (idVideo: string, favoriteVideo: boolean) => {
         videos.map((video) => {
             if (video.id === idVideo) {
-                video.favorite = favoriteVideo;
+                video.favorite = favoriteVideo
                 video.fcolor = video.favorite ? colorTag[0] : colorTag[1]
-
-                setLocalStorage('favorites', video)
+                setFavoritesOrPlaylistItemsInLocalStorage('favorites', video)
             }
+            return video
         })
         setVideos([...videos])
     }
@@ -108,7 +112,7 @@ export default function VideosArea() {
         if (idVideo && idVideo !== '') {
             videos.map((video) => {
                 if (video.id === idVideo) {
-                    video.playlist = playlist;
+                    video.playlist = playlist
                     video.playlist ?
                         video.pcolor = colorTag[0]
                         : video.pcolor = colorTag[1]
@@ -120,9 +124,10 @@ export default function VideosArea() {
                         title: video.title,
                         playlistId: playlistSelected.id
                     }
-                    setLocalStorage('playlistItems', value)
+                    setFavoritesOrPlaylistItemsInLocalStorage('playlistItems', value)
                     setIsOpen(false)
                 }
+                return video
             })
             setVideos([...videos])
         }
@@ -132,8 +137,8 @@ export default function VideosArea() {
         setNewPlaylistVideo({ id: id, isAdded: isAdded })
         setIsOpen(true)
     }
-    const setLocalStorage = (field: string, value: any) => {
-        let list = JSON.parse(localStorage.getItem(field) || '[]')
+    const setFavoritesOrPlaylistItemsInLocalStorage = (field: string, value: any) => {
+        let list = getStorage(field)
 
         let color = ''
         field === 'favorites' ? color = 'fcolor' : color = 'pcolor'
@@ -141,54 +146,42 @@ export default function VideosArea() {
         if (remove)
             list = removeVideo(field, JSON.parse(localStorage.getItem(field)!), remove.id);
 
-        localStorage.setItem(field, JSON.stringify([...list, value]))
+        setGenericStorage([...list, value], field)
 
         videos.map((video: any) => {
-            if (video.id === value.id) {
-                if (remove) {
-                    video[field] = !remove;
-                    video[color] = remove ? theme.unactiveColor : theme.activeColor
-                }
+            if (video.id === value.id && remove) {
+                video[field] = !remove;
+                video[color] = remove ? theme.unactiveColor : theme.activeColor
             }
+            return video
         })
-        localStorage.setItem('researched', JSON.stringify(videos))
-        setVideos(JSON.parse(localStorage.getItem('researched')!))
+        setGenericStorage(videos, 'researched')
+        setVideos(getStorage('researched'))
     }
 
-    const close = () => {
-        setIsOpen(false)
-    }
+    const close = () => setIsOpen(false)
 
     return (
         <>
             <div style={{ background: theme.section, color: theme.font }} className="videos-container">
-                <div className="header">
-                    <div className={'input-area'}>
-                        <input style={{ background: theme.section, color: theme.font }}
-                            placeholder={'Type what you wish to find...'}
-                            name='research'
-                            value={keyWord}
-                            onKeyPress={(e) => getResearch(e)}
-                            onChange={(e) => setKeyWord(e.target.value)}
-                            type="text" />
-                        <button onClick={() => research()} className="icon">
-                            <FontAwesomeIcon size={'lg'} color={'#2C2C2C'} rotation={90} icon={faSearch} />
-                        </button>
-                    </div>
-                </div>
+                <Header
+                    keyWord={keyWord}
+                    getResearch={getResearch}
+                    setKeyWord={setKeyWord}
+                    research={research}
+                    theme={theme}
+                />
                 <div className="section">
                     {videos && videos.length > 0 ? videos.map((video) => {
                         return (
                             <>
                                 <div key={video.id} className="video-box">
-                                    <VideoBox video={video} />
-                                    <div className="actions">
-                                        <Actions video={video}/>
-                                        <div className="icons-box">
-                                            <FontAwesomeIcon style={{marginRight:'10px'}} onClick={() => { handleNewPlaylistVideo(video.id, !video.playlist) }} color={video.playlist ? theme.activeIcon : theme.unactiveIcon} icon={faFolderPlus} />
-                                            <FontAwesomeIcon onClick={() => handleFavorite(video.id, !video.favorite)} color={video.favorite ? theme.activeIcon : theme.unactiveIcon} icon={faStar} />
-                                        </div>
-                                    </div>
+                                    <VideoBox main={true} video={video} actions={
+                                        [
+                                            { function: handleNewPlaylistVideo, icon: faFolderPlus },
+                                            { function: handleFavorite, icon: faStar }
+                                        ]}
+                                    />
                                 </div>
                                 <Modal
                                     isOpen={isOpen}
@@ -224,7 +217,7 @@ export default function VideosArea() {
                                         </Link>
                                     </span>
                                     <select
-                                        onChange={(e) => setPlaylistSelected(JSON.parse(e.target.value))}
+                                        onChange={(e: any) => setPlaylistSelected(e.target.value)}
                                         style={{
                                             marginTop: '10px',
                                             width: '100%',
@@ -235,11 +228,11 @@ export default function VideosArea() {
                                             backgroundColor: theme.section,
                                             color: theme.font
                                         }}>
-                                        <option value="" selected={playlistSelected && playlistSelected.name === ''}>Choose a Playlist</option>
+                                        <option value="" style={{ display: playlistSelected && playlistSelected.name === '' ? 'none' : '' }}>Choose a Playlist</option>
                                         {playlistNames && playlistNames.length > 0 ?
-                                            Array.from(playlistNames).map((all: any) => {
+                                            Array.from(playlistNames).map((playlistName: IPlaylists) => {
                                                 return (
-                                                    <option key={all.id} value={JSON.stringify(all)}> {all.name}</option>
+                                                    <option key={playlistName.id} value={JSON.stringify({ name: playlistName.name, id: playlistName.id })}>{playlistName.name}</option>
                                                 )
                                             }) : <></>}
                                     </select>

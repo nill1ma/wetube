@@ -23,9 +23,9 @@ export default function Theme() {
             name: 'light',
             section: '#D7D7D7',
             sideBar: '#E4E4E4',
-            font: '#000',
-            iconAreaActive: '#000',
-            iconAreaUnactive: '#000',
+            font: '#2c2c2c',
+            iconAreaActive: '#2c2c2c',
+            iconAreaUnactive: '#2c2c2c',
             unactiveIcon: '#2C2C2C',
             activeIcon: "rgb(255, 140, 0)",
             themeArea: '#D7D7D7'

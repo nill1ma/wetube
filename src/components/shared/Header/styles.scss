@@ -1,0 +1,27 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 10vh;
+    // padding-top: 20px;
+    .input-area {
+        display: flex;
+        width: 70%;
+        border-bottom: 1px solid #fff;
+        .icon {
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: none;
+            outline: none;
+            cursor: pointer !important;
+        }
+        input {
+            font-size: 18px;
+            // padding: 0 10px;
+            border: 0;
+            outline: none;
+            // width: 100%;
+        }
+    }
+}

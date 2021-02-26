@@ -7,8 +7,8 @@ import ThemeContext from '../../../context';
 import { IPlaylistItems } from '../../../interfaces/IPlaylistItems';
 import { IPlaylists } from '../../../interfaces/IPlaylists';
 import { getStorage, removeVideo, setGenericStorage, updateResearchedIconPLaylist } from '../../../services/Util';
-import Actions from '../Item/Actions';
-import VideoBox from '../Item/VideoBox';
+import Actions from '../../shared/Actions';
+import VideoBox from '../../shared/VideoBox';
 import './styles.scss';
 
 export default function Playlists() {

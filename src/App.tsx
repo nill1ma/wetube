@@ -15,17 +15,17 @@ export default function App() {
   return (
     <div className="App">
       <Router>
-        <Switch>
-          <div className="middle">
-            <ThemeContext.Provider value={[theme, setTheme]}>
+        <ThemeContext.Provider value={[theme, setTheme]}>
+          <Switch>
+            <div className="middle">
               <Sidebar />
               <Route path={'/favorites'} component={Favorites} />
               <Route path={'/create'} component={Create} />
               <Route path={'/playlists'} component={Playlists} />
               <Route path={'/'} exact component={VideosArea} />
-            </ThemeContext.Provider>
-          </div>
-        </Switch>
+            </div>
+          </Switch>
+        </ThemeContext.Provider>
       </Router>
     </div>
   );
