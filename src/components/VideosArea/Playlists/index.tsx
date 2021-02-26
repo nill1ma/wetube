@@ -40,10 +40,15 @@ export default function Playlists() {
     }
 
     const removePlaylist = (id: number, index: number) => {
-        const pItems = playlistItems.find((p) => id === p.playlistId)
-        setPlaylistItems(playlistItems.filter((p) => id !== p.playlistId));
+        const pItems = modifyPlaylistItems(id, 'continue')
+        setPlaylistItems(pItems);
+        setGenericStorage(pItems, 'playlistItems')
         setPlaylists(playlists.splice(index, 1))
-        if (pItems) updateResearchedIconPLaylist(pItems.id, colorTag[1])
+        if (playlistItems) modifyPlaylistItems(id, '').map(pI => updateResearchedIconPLaylist(pI.id, colorTag[1]))
+    }
+
+    const modifyPlaylistItems = (id: number, order: string) => {
+        return order === 'continue' ? playlistItems.filter((p) => id !== p.playlistId) : playlistItems.filter((p) => id == p.playlistId)
     }
 
     return (
@@ -51,7 +56,7 @@ export default function Playlists() {
             <div style={{ background: theme.section, color: theme.font }} className="videos-container">
                 <div className="header-playlist">
                     <div className={'abas-area'}>
-                        {currentAba && currentAba !== 0 ?playlists.map((playlist: IPlaylists, index: number) => {
+                        {currentAba && currentAba !== 0 ? playlists.map((playlist: IPlaylists, index: number) => {
                             return (
                                 <>
                                     <div
@@ -87,7 +92,7 @@ export default function Playlists() {
                                         />
                                     </div>
                                 </>)
-                        }): <></>}
+                        }) : <></>}
                     </div>
                     <Link to={'create'} className="add">
                         <FontAwesomeIcon className={'icon'} color={theme.font} size={'2x'} icon={faPlusCircle} />
@@ -108,11 +113,11 @@ export default function Playlists() {
                             </div>
                         )
                     }) : (
-                        <div className={'empity-message'}>
-                            <FontAwesomeIcon color={'#1A2EFF'} size={'2x'} icon={faInfoCircle} />
-                            <span>You don't have any videos in your playlist</span>
-                        </div>
-                    )}
+                            <div className={'empity-message'}>
+                                <FontAwesomeIcon color={'#1A2EFF'} size={'2x'} icon={faInfoCircle} />
+                                <span>You don't have any videos in your playlist</span>
+                            </div>
+                        )}
                 </div>
                 {playlists && playlists.length > 0 ? (
                     <div className="page-token">

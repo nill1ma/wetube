@@ -4,10 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ThemeContext from '../../context'
 import './styles.scss'
 import { useContext } from 'react'
+import { getStorage, setGenericStorage } from '../../services/Util'
 
 export default function Theme() {
 
-    var Obj = [
+    var themes = [
         {
             name: 'dark',
             section: '#2C2C2C',
@@ -41,14 +42,18 @@ export default function Theme() {
     )
 
     useEffect(() => {
-        setTheme(localStorage.getItem('theme') ? JSON.parse(localStorage.getItem('theme')!) : Obj[0])
+        handleTheme()
     }, [])
 
-    const handleTheme = (name: string) => {
-        var t = Obj[0].name === name ? Obj[0] : Obj[1]
+    const handleTheme = (name?: string) => {
+        const currentTheme = checkIfexistTheme(name)
         localStorage.removeItem('theme')
-        localStorage.setItem('theme', JSON.stringify(t))
-        setTheme(JSON.parse(localStorage.getItem('theme')!))
+        setGenericStorage(currentTheme, 'theme')
+        setTheme(themes.find(theme => theme.name === currentTheme))
+    }
+
+    const checkIfexistTheme = (name?:string) => {
+        return name ?  name :  getStorage('theme')
     }
 
     const openContainerTheme = () => {

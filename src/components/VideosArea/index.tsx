@@ -40,9 +40,8 @@ export default function VideosArea() {
     const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
-        var list = getStorage('researched')
-        setVideos(list)
-        setPlaylistNames(getStorage('allPlaylists'))
+        setVideos(getStorage('researched'))
+        setPlaylistNames(getStorage(('allPlaylists')))
     }, [])
 
     useEffect(() => {
@@ -92,8 +91,8 @@ export default function VideosArea() {
         list = await mount(response)
         setNext(nextPageToken)
         if (prevPageToken) setBack(prevPageToken)
-        localStorage.setItem('researched', JSON.stringify(list))
-        setVideos(Array.from(JSON.parse(localStorage.getItem('researched')!)))
+        setGenericStorage(list, 'researched')
+        setVideos(Array.from(getStorage('researched')))
     }
 
     const handleFavorite = (idVideo: string, favoriteVideo: boolean) => {
@@ -277,11 +276,11 @@ export default function VideosArea() {
                             </>
                         )
                     }) : (
-                        <div className={'empity-message'}>
-                            <FontAwesomeIcon color={'#1A2EFF'} size={'2x'} icon={faInfoCircle} />
-                            <span>You have to search to get results</span>
-                        </div>
-                    )}
+                            <div className={'empity-message'}>
+                                <FontAwesomeIcon color={'#1A2EFF'} size={'2x'} icon={faInfoCircle} />
+                                <span>You have to search to get results</span>
+                            </div>
+                        )}
                 </div>
                 {videos && videos.length > 0 ? (
                     <div className="page-token">

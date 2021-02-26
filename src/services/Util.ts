@@ -1,7 +1,7 @@
-export const removeVideo = (field: string, videos: any, id: any): Array<any> => {
+export const removeVideo = (field: string, videos: any, id: any) => {
     var l = videos.filter((video: any) => video.id !== id)
-    localStorage.setItem(field, JSON.stringify(l))
-    return JSON.parse(localStorage.getItem(field)!)
+    setGenericStorage(field, l)
+    return getStorage(field)
 }
 
 export const redirect = (useHistory: any, url: string) => {
@@ -9,7 +9,7 @@ export const redirect = (useHistory: any, url: string) => {
 }
 
 export const updateResearchedIconPLaylist = (id: string, colorTag: string) => {
-    var researched = JSON.parse(localStorage.getItem('researched')!)
+    var researched = getStorage('researched')
     researched.map((r: any) => {
         if (r.id === id) r.playlist = false; r.fcolor = colorTag
         return r
@@ -17,11 +17,17 @@ export const updateResearchedIconPLaylist = (id: string, colorTag: string) => {
     setGenericStorage(researched, 'researched')
 }
 
-export const setGenericStorage = (list: any, localStorageName: string) => {
-    localStorage.setItem(localStorageName, JSON.stringify(list))
-    return JSON.parse(localStorage.getItem(localStorageName)!)
+export const setGenericStorage = (value: any, localStorageName: string) => {
+    isTheme(localStorageName) ?
+        localStorage.setItem(localStorageName, value) :
+        localStorage.setItem(localStorageName, JSON.stringify(value))
+    return getStorage(localStorageName)
 }
 
 export const getStorage = (localStorageName: string) => {
-    return JSON.parse(localStorage.getItem(localStorageName)! || '[]')
+    return isTheme(localStorageName) ?
+        (localStorage.getItem(localStorageName)! || 'dark') :
+        JSON.parse(localStorage.getItem(localStorageName)! || '[]')
 }
+
+const isTheme = (localStorageName: string) => localStorageName === 'theme'

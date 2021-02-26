@@ -20,7 +20,7 @@ export default function Favorites() {
     const removeFavorite = (id: any) => {
         let response = removeVideo('favorites', favorites, id)
         setFavorites(response)
-        var researched = JSON.parse(localStorage.getItem('researched')!)
+        var researched = getStorage('researched')
         researched.map((r: any) => {
             return r.id === id ? r.favorite = false : r.fcolor = colorTag[1]
         })
