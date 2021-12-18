@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Sidebar from './components/Sidebar';
 import VideosArea from './components/VideosArea';
-import Favorites from './components/VideosArea/Favorites';
 import Playlists from './components/VideosArea/Playlists';
 import Create from './components/VideosArea/Playlists/Create';
 import ThemeContext from './context';
+import Favorites from './pages/Favorites';
 
 export default function App() {
 

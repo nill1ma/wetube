@@ -52,6 +52,10 @@ export default function VideosArea() {
         else { setIsDisabled(true) }
     }, [isOpen])
 
+    useEffect(()=>{
+        console.log(playlistSelected['id'])
+    }, [playlistSelected])
+
     const isFavoriteOrPlylist = (field: string, id: string) => {
         var is: any
         if (localStorage.getItem(field)) {
@@ -121,7 +125,7 @@ export default function VideosArea() {
                         pcolor: video.pcolor,
                         playlist: video.playlist,
                         title: video.title,
-                        playlistId: playlistSelected.id
+                        playlistId: JSON.parse(JSON.stringify(playlistSelected)).id
                     }
                     setFavoritesOrPlaylistItemsInLocalStorage('playlistItems', value)
                     setIsOpen(false)
