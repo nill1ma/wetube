@@ -52,7 +52,7 @@ export default function VideosArea() {
         else { setIsDisabled(true) }
     }, [isOpen])
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(playlistSelected['id'])
     }, [playlistSelected])
 
@@ -119,13 +119,12 @@ export default function VideosArea() {
                     video.playlist ?
                         video.pcolor = colorTag[0]
                         : video.pcolor = colorTag[1]
-
                     let value = {
                         id: idVideo,
                         pcolor: video.pcolor,
                         playlist: video.playlist,
                         title: video.title,
-                        playlistId: JSON.parse(JSON.stringify(playlistSelected)).id
+                        playlistId: playlistSelected.id
                     }
                     setFavoritesOrPlaylistItemsInLocalStorage('playlistItems', value)
                     setIsOpen(false)
@@ -163,6 +162,11 @@ export default function VideosArea() {
     }
 
     const close = () => setIsOpen(false)
+    const handlePlayListSelected = (value: any) => {
+        const currentPlaylist = playlistNames.find(playlist => playlist.id === Number(value))!
+        const { active, ...newObj } = currentPlaylist
+        setPlaylistSelected(newObj)
+    }
 
     return (
         <>
@@ -220,7 +224,7 @@ export default function VideosArea() {
                                         </Link>
                                     </span>
                                     <select
-                                        onChange={(e: any) => setPlaylistSelected(e.target.value)}
+                                        onChange={(e: any) => handlePlayListSelected(e.target.value)}
                                         style={{
                                             marginTop: '10px',
                                             width: '100%',
@@ -235,7 +239,7 @@ export default function VideosArea() {
                                         {playlistNames && playlistNames.length > 0 ?
                                             Array.from(playlistNames).map((playlistName: IPlaylists) => {
                                                 return (
-                                                    <option key={playlistName.id} value={JSON.stringify({ name: playlistName.name, id: playlistName.id })}>{playlistName.name}</option>
+                                                    <option key={playlistName.id} value={playlistName.id}>{playlistName.name}</option>
                                                 )
                                             }) : <></>}
                                     </select>
@@ -280,11 +284,11 @@ export default function VideosArea() {
                             </>
                         )
                     }) : (
-                            <div className={'empity-message'}>
-                                <FontAwesomeIcon color={'#1A2EFF'} size={'2x'} icon={faInfoCircle} />
-                                <span>You have to search to get results</span>
-                            </div>
-                        )}
+                        <div className={'empity-message'}>
+                            <FontAwesomeIcon color={'#1A2EFF'} size={'2x'} icon={faInfoCircle} />
+                            <span>You have to search to get results</span>
+                        </div>
+                    )}
                 </div>
                 {videos && videos.length > 0 ? (
                     <div className="page-token">

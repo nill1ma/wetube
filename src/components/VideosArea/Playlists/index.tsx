@@ -103,12 +103,16 @@ export default function Playlists() {
                     {currentAba && currentAba !== 0 ? playlistItems.filter((video) => currentAba === video.playlistId).slice(paagination[0], paagination[1]).map((video) => {
                         return (
                             <div key={video.id} className="video-box">
-                                <VideoBox video={video} />
+                                <VideoBox video={video} actions={
+                                [{ function: removePlaylistItem, icon: faTrashAlt }]}
+                            />
                                 <div className="actions">
-                                    <Actions video={video} />
-                                    <div className="icons-box">
+                                    {/* <Actions video={video} actions={
+                                        [{ function: removePlaylistItem, icon: faTrashAlt }]}
+                                        /> */}
+                                    {/* <div className="icons-box">
                                         <FontAwesomeIcon onClick={() => removePlaylistItem(video.id)} icon={faTrashAlt} />
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         )
