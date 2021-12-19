@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useContext } from 'react'
-import ReactTooltip from 'react-tooltip'
 import YouTube from 'react-youtube'
 import ThemeContext from '../../../context'
+import Tooltip from '../Toolpip'
 import './styles.scss'
 
 export default function VideoBox(props: any) {
@@ -16,20 +16,7 @@ export default function VideoBox(props: any) {
                 id={`${video.id}`}
                 videoId={`${video.id}`} />
             <div className="video-box-footer">
-                <span data-tip data-for={video.id}>
-                    {video.title.substring(0, 25)}
-                    {video.title.length > 35 ? '...' : ''}
-                </span>
-                <ReactTooltip
-                    id={video.id}
-                    className={'tooltip'}
-                    type={'info'}
-                    textColor={'#2C2C2C'}
-                    border={true}
-                    borderColor={'#2C2C2C'}
-                    place={'right'}
-                    getContent={() => video.title}
-                />
+                <Tooltip video={video} />
                 <div className={main ? "icons-box-main-page" : "icons-box-favorites-and-playlists"}>
                     {actions.map((action: any) => {
                         return (

@@ -1,13 +1,12 @@
 import { faArrowAltCircleLeft, faArrowAltCircleRight, faInfoCircle, faPlusCircle, faTrashAlt, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import ThemeContext from '../../../context';
 import { IPlaylistItems } from '../../../interfaces/IPlaylistItems';
 import { IPlaylists } from '../../../interfaces/IPlaylists';
 import { getStorage, removeVideo, setGenericStorage, updateResearchedIconPLaylist } from '../../../services/Util';
-import Actions from '../../shared/Actions';
 import VideoBox from '../../shared/VideoBox';
 import './styles.scss';
 

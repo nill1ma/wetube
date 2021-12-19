@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactTooltip from 'react-tooltip'
 
-export default function Actions(props: any) {
+export default function Tooltip(props: any) {
     const { video } = props
     return (
         <>

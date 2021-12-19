@@ -1,4 +1,4 @@
-import { faArrowAltCircleLeft, faArrowAltCircleRight, faFolderPlus, faInfoCircle, faSearch, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faArrowAltCircleLeft, faArrowAltCircleRight, faFolderPlus, faInfoCircle, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useEffect, useState } from 'react';
 import Modal from "react-modal";
@@ -9,7 +9,6 @@ import { Videos } from '../../interfaces/Videos';
 import { getStorage, removeVideo, setGenericStorage } from '../../services/Util';
 import { search } from '../../services/YoutubeApi';
 import Header from "../shared/Header";
-import Actions from '../shared/Actions';
 import VideoBox from '../shared/VideoBox';
 import './styles.scss';
 
