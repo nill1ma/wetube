@@ -3,6 +3,6 @@ export interface Videos {
     title: string
     favorite:boolean
     fcolor:string
-    playlist:boolean
+    playlist?:boolean
     pcolor:string
 }

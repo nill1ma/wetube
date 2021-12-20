@@ -178,7 +178,7 @@ export default function VideosArea() {
                     theme={theme}
                 />
                 <div className="section">
-                    {videos && videos.length > 0 ? videos.map((video) => {
+                    {videos && videos.length > 0 ? videos.map((video:Videos) => {
                         return (
                             <>
                                 <div key={video.id} className="video-box">

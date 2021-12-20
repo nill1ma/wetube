@@ -1,14 +1,13 @@
-import { faArrowAltCircleLeft, faArrowAltCircleRight, faInfoCircle, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useState } from 'react';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Header } from 'semantic-ui-react';
+import { IFavorites } from '../../interfaces/IFavorites';
+import { getStorage, removeVideo, setGenericStorage } from '../../services/Util';
+import { SingleVideoArea, VideosContainer } from './styles';
 import EmpityMessage from '../../components/EmpityMessage';
 import PageTokenButtons from '../../components/PageTokenButtons';
 import VideoBox from '../../components/shared/VideoBox';
 import ThemeContext from '../../context';
-import { IFavorites } from '../../interfaces/IFavorites';
-import { getStorage, removeVideo, setGenericStorage } from '../../services/Util';
-import { SingleVideoArea, VideosContainer } from './styles';
 import './styles.scss';
 
 export default function Favorites() {

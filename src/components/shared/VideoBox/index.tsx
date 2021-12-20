@@ -3,19 +3,36 @@ import React, { useContext } from 'react'
 import YouTube from 'react-youtube'
 import ThemeContext from '../../../context'
 import Tooltip from '../Toolpip'
-import './styles.scss'
+import { IFavorites } from '../../../interfaces/IFavorites';
+import { IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import { IPlaylistItems } from '../../../interfaces/IPlaylistItems'
+import { Videos } from '../../../interfaces/Videos'
+import { VideoBoxContainer, VideoBoxFooter } from './styles'
 
-export default function VideoBox(props: any) {
+type Actions = {
+    function: (id: any, isAdded: boolean) => void
+    icon: IconDefinition
+}
+
+type TVideo = IPlaylistItems | IFavorites | Videos
+
+type VideoBoxProps = {
+    video: TVideo
+    actions: Actions[]
+    main?: Boolean
+}
+
+export default function VideoBox(props: VideoBoxProps) {
     const [theme] = useContext(ThemeContext)
     const { video, actions, main } = props
 
     return (
-        <div className="video-box-container">
+        <VideoBoxContainer>
             <YouTube
                 opts={{ height: '180', width: '100%' }}
                 id={`${video.id}`}
                 videoId={`${video.id}`} />
-            <div className="video-box-footer">
+            <VideoBoxFooter>
                 <Tooltip video={video} />
                 <div className={main ? "icons-box-main-page" : "icons-box-favorites-and-playlists"}>
                     {actions.map((action: any) => {
@@ -24,8 +41,8 @@ export default function VideoBox(props: any) {
                         )
                     })}
                 </div>
-            </div>
-        </div >
+            </VideoBoxFooter>
+        </VideoBoxContainer>
 
     )
 }
