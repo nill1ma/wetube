@@ -3,4 +3,5 @@ export interface IPlaylistItems {
     title: string
     id: string
     playlist?:boolean
+    favorite?:boolean
 }

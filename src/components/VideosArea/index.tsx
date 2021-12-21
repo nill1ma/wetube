@@ -8,8 +8,8 @@ import { IPlaylists } from "../../interfaces/IPlaylists";
 import { Videos } from '../../interfaces/Videos';
 import { getStorage, removeVideo, setGenericStorage } from '../../services/Util';
 import { search } from '../../services/YoutubeApi';
-import Header from "../shared/Header";
-import VideoBox from '../shared/VideoBox';
+import Header from "../Header";
+import VideoBox from '../VideoBox';
 import './styles.scss';
 
 export default function VideosArea() {
@@ -50,10 +50,6 @@ export default function VideosArea() {
         }
         else { setIsDisabled(true) }
     }, [isOpen])
-
-    useEffect(() => {
-        console.log(playlistSelected['id'])
-    }, [playlistSelected])
 
     const isFavoriteOrPlylist = (field: string, id: string) => {
         var is: any

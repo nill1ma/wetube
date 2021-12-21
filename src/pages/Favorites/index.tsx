@@ -6,7 +6,7 @@ import { getStorage, removeVideo, setGenericStorage } from '../../services/Util'
 import { SingleVideoArea, VideosContainer } from './styles';
 import EmpityMessage from '../../components/EmpityMessage';
 import PageTokenButtons from '../../components/PageTokenButtons';
-import VideoBox from '../../components/shared/VideoBox';
+import VideoBox from '../../components/VideoBox';
 import ThemeContext from '../../context';
 import './styles.scss';
 
