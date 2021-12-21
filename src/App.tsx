@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Sidebar from './components/Sidebar';
-import VideosArea from './components/VideosArea';
-import Playlists from './components/VideosArea/Playlists';
-import Create from './components/VideosArea/Playlists/Create';
+import VideosArea from './pages/VideosArea';
+import Playlists from './pages/Playlists';
+import Create from './pages/Playlists/Create';
 import ThemeContext from './context';
 import Favorites from './pages/Favorites';
 

@@ -8,8 +8,8 @@ import { IPlaylists } from "../../interfaces/IPlaylists";
 import { Videos } from '../../interfaces/Videos';
 import { getStorage, removeVideo, setGenericStorage } from '../../services/Util';
 import { search } from '../../services/YoutubeApi';
-import Header from "../Header";
-import VideoBox from '../VideoBox';
+import Header from "../../components/Header";
+import VideoBox from '../../components/VideoBox';
 import './styles.scss';
 
 export default function VideosArea() {

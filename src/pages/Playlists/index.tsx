@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
-import ThemeContext from '../../../context';
-import { IPlaylistItems } from '../../../interfaces/IPlaylistItems';
-import { IPlaylists } from '../../../interfaces/IPlaylists';
-import { getStorage, removeVideo, setGenericStorage, updateResearchedIconPLaylist } from '../../../services/Util';
-import VideoBox from '../../VideoBox';
+import ThemeContext from '../../context';
+import { IPlaylistItems } from '../../interfaces/IPlaylistItems';
+import { IPlaylists } from '../../interfaces/IPlaylists';
+import { getStorage, removeVideo, setGenericStorage, updateResearchedIconPLaylist } from '../../services/Util';
+import VideoBox from '../../components/VideoBox';
 import './styles.scss';
 
 export default function Playlists() {

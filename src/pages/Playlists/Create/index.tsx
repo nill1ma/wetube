@@ -2,10 +2,10 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useContext, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import ThemeContext from '../../../../context'
+import ThemeContext from '../../../context'
 import './styles.scss'
-import { getStorage, redirect, setGenericStorage } from '../../../../services/Util'
-import { IPlaylists } from '../../../../interfaces/IPlaylists'
+import { getStorage, redirect, setGenericStorage } from '../../../services/Util'
+import { IPlaylists } from '../../../interfaces/IPlaylists'
 
 
 export default function Create() {

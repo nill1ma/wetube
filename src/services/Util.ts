@@ -1,6 +1,6 @@
 export const removeVideo = (field: string, videos: any, id: any) => {
     var l = videos.filter((video: any) => video.id !== id)
-    setGenericStorage(field, l)
+    setGenericStorage(l, field)
     return getStorage(field)
 }
 
