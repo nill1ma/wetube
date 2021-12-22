@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 
-export const EMContainer = styled.article`
+export const EMContainer = styled.div`
     display: flex;
+    width: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
 
     span{
         margin-top: 10px;                

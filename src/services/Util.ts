@@ -1,7 +1,7 @@
-export const removeVideo = (field: string, videos: any, id: any) => {
-    var l = videos.filter((video: any) => video.id !== id)
-    setGenericStorage(l, field)
-    return getStorage(field)
+export const removeVideo = (localStorageKey: string, videos: any, id: string) => {
+    var items = videos.filter((video: any) => video.id !== id)
+    setGenericStorage(items, localStorageKey)
+    return getStorage(localStorageKey)
 }
 
 export const redirect = (useHistory: any, url: string) => {

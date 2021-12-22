@@ -105,14 +105,14 @@ export default function Playlists() {
                                 <VideoBox video={video} actions={
                                 [{ function: removePlaylistItem, icon: faTrashAlt }]}
                             />
-                                <div className="actions">
+                                {/* <div className="actions"> */}
                                     {/* <Actions video={video} actions={
                                         [{ function: removePlaylistItem, icon: faTrashAlt }]}
                                         /> */}
                                     {/* <div className="icons-box">
                                         <FontAwesomeIcon onClick={() => removePlaylistItem(video.id)} icon={faTrashAlt} />
                                     </div> */}
-                                </div>
+                                {/* </div> */}
                             </div>
                         )
                     }) : (

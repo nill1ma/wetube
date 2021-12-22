@@ -9,6 +9,7 @@ import PageTokenButtons from '../../components/PageTokenButtons';
 import VideoBox from '../../components/VideoBox';
 import ThemeContext from '../../context';
 import './styles.scss';
+import { Videos } from '../../interfaces/Videos';
 
 export default function Favorites() {
 
@@ -21,11 +22,17 @@ export default function Favorites() {
     const removeFavorite = (id: any) => {
         let response = removeVideo('favorites', favorites, id)
         setFavorites(response)
-        var researched = getStorage('researched')
-        researched.map((r: any) => {
-            return r.id === id ? r.favorite = false : r.fcolor = colorTag[1]
-        })
-        setGenericStorage(researched, 'researched')
+        reAdjustResearchedStorage(id)
+    }
+
+    const reAdjustResearchedStorage = (id: any) => {
+        var lastestResearched = getStorage('researched')
+        const lastest = lastestResearched.findIndex((lastest: Videos) => lastest.id === (id))
+        lastestResearched[lastest].favorite = false
+        // lastestResearched.map((researched: Videos) => {
+        //     return researched.id === id ? researched.favorite = false : researched.fcolor = colorTag[1]
+        // })
+        setGenericStorage(lastestResearched, 'researched')
     }
 
     const getSearchFavorites = (event: any) => {
@@ -44,7 +51,7 @@ export default function Favorites() {
         setFavorites(list)
     }
 
-    const favoriteList = () =>{
+    const favoriteList = () => {
         if (favorites && favorites.length > 0)
             return favorites.slice(paagination[0], paagination[1])
         return []
@@ -61,23 +68,24 @@ export default function Favorites() {
                 theme={theme}
             />
             <SingleVideoArea>
-                {favoriteList() ? favoriteList().map((video) => {
-                    return (
-                        <article key={video.id} className="video-box">
-                            <VideoBox main={false} video={video} actions={
-                                [{ function: removeFavorite, icon: faTrashAlt }]}
-                            />
-                        </article>
-                    )
-                }) : (
-                    <EmpityMessage message={'You don`t have any videos in your favorite list'} />
-                )}
+                {favoriteList() && favoriteList().length > 0 ?
+                    favoriteList().map((video) => {
+                        return (
+                            <article key={video.id} className="video-box">
+                                <VideoBox main={false} video={video} actions={
+                                    [{ function: removeFavorite, icon: faTrashAlt }]}
+                                />
+                            </article>
+                        )
+                    }) : (
+                        <EmpityMessage message={'You don`t have any videos in your favorite list'} />
+                    )}
             </SingleVideoArea>
             {favorites && favorites.length > 0 ? (
                 <PageTokenButtons
-                setPagination={setPagination}
-                pagination={paagination}
-                font={theme.font} />
+                    setPagination={setPagination}
+                    pagination={paagination}
+                    font={theme.font} />
             ) : (<></>)}
         </VideosContainer>
     )

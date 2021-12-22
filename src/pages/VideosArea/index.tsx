@@ -32,8 +32,8 @@ export default function VideosArea() {
     var list: Videos[] = []
 
     const colorTag = [
-        'rgb(255, 140, 0)',
-        'rgba(255, 255, 255, 0.5)'
+        'rgba(255, 255, 255, 0.5)',
+        'rgb(255, 140, 0)'
     ]
 
     const [isOpen, setIsOpen] = useState(false)
@@ -51,15 +51,13 @@ export default function VideosArea() {
         else { setIsDisabled(true) }
     }, [isOpen])
 
-    const isFavoriteOrPlylist = (field: string, id: string) => {
-        var is: any
-        if (localStorage.getItem(field)) {
-            let f = Array.from(JSON.parse(localStorage.getItem(field)!))
-            is = f.find((checkFavorite: any) => {
-                return checkFavorite.id === id
-            })
+    const isFavoriteOrPlylist = (key: string, id: string) => {
+        var isFOP: any
+        if (localStorage.getItem(key)) {
+            let items = Array.from(localStorage.getItem(key)!)
+            isFOP = items.find((FOP: any) => FOP.id === id)
         }
-        return is !== undefined ? true : false
+        return isFOP
     }
 
     const getResearch = (event: any) => {
@@ -69,15 +67,15 @@ export default function VideosArea() {
     const mount = (response: any) => {
         list = []
         response.forEach((item: any) => {
-            let obj = {
+            let res:Videos = {
                 title: item.snippet.title,
                 id: item.id.videoId,
-                favorite: isFavoriteOrPlylist('favorites', item.id.videoId) ? true : false,
-                fcolor: isFavoriteOrPlylist('favorites', item.id.videoId) ? theme.activeIcon : theme.unactiveIcon,
-                playlist: isFavoriteOrPlylist('playlistItems', item.id.videoId) ? true : false,
-                pcolor: isFavoriteOrPlylist('playlistItems', item.id.videoId) ? theme.activeIcon : theme.unactiveIcon,
+                favorite: isFavoriteOrPlylist('favorites', item.id) ? true : false,
+                fcolor: isFavoriteOrPlylist('favorites', item.id) ? theme.activeIcon : theme.unactiveIcon,
+                playlist: isFavoriteOrPlylist('playlistItems', item.id) ? true : false,
+                pcolor: isFavoriteOrPlylist('playlistItems', item.id) ? theme.activeIcon : theme.unactiveIcon,
             }
-            list.push(obj)
+            list.push(res)
         })
         return list
     }
@@ -95,14 +93,19 @@ export default function VideosArea() {
     }
 
     const handleFavorite = (idVideo: string, favoriteVideo: boolean) => {
-        videos.map((video) => {
-            if (video.id === idVideo) {
-                video.favorite = favoriteVideo
-                video.fcolor = video.favorite ? colorTag[0] : colorTag[1]
-                setFavoritesOrPlaylistItemsInLocalStorage('favorites', video)
-            }
-            return video
-        })
+        const [yeelow, gray] = colorTag
+        const index = videos.findIndex((current: Videos) => current.id === idVideo)
+        videos[index].favorite = favoriteVideo
+        videos[index].fcolor = favoriteVideo ? yeelow : gray
+        setFavoritesOrPlaylistItemsInLocalStorage('favorites', videos[index])
+        // videos.map((video) => {
+        //     if (video.id === idVideo) {
+        //         video.favorite = favoriteVideo
+        //         video.fcolor = video.favorite ? colorTag[0] : colorTag[1]
+        //         setFavoritesOrPlaylistItemsInLocalStorage('favorites', video)
+        //     }
+        //     return video
+        // })
         setVideos([...videos])
     }
 
@@ -134,29 +137,32 @@ export default function VideosArea() {
         setNewPlaylistVideo({ id: id, isAdded: isAdded })
         setIsOpen(true)
     }
-    const setFavoritesOrPlaylistItemsInLocalStorage = (field: string, value: any) => {
-        let list = getStorage(field)
+    const setFavoritesOrPlaylistItemsInLocalStorage = (key: string, value: any) => {
+        let items = getStorage(key)
 
         let color = ''
-        field === 'favorites' ? color = 'fcolor' : color = 'pcolor'
-        let remove = list.find((l: any) => l.id === value.id)
-        if (remove)
-            list = removeVideo(field, JSON.parse(localStorage.getItem(field)!), remove.id);
-
-        setGenericStorage([...list, value], field)
+        const field = key === 'favorites' ? color = 'favor' : color = 'pcolor'
+        let fOPItemsStorage = items.find((item: any) => item.id === value.id)
+        if (fOPItemsStorage) {
+            items = removeVideo(key, items, fOPItemsStorage.id);
+            setGenericStorage([...items], key)
+        } else {
+            setGenericStorage([...items, value], key)
+        }
 
         videos.map((video: any) => {
-            if (video.id === value.id && remove) {
-                video[field] = !remove;
-                video[color] = remove ? theme.unactiveColor : theme.activeColor
+            if (video.id === value.id && fOPItemsStorage) {
+                video[key] = !fOPItemsStorage;
+                video[color] = fOPItemsStorage ? theme.activeColor : theme.unactiveColor
             }
             return video
         })
-        setGenericStorage(videos, 'researched')
+        setGenericStorage([...videos], 'researched')
         setVideos(getStorage('researched'))
     }
 
     const close = () => setIsOpen(false)
+
     const handlePlayListSelected = (value: any) => {
         const currentPlaylist = playlistNames.find(playlist => playlist.id === Number(value))!
         const { active, ...newObj } = currentPlaylist
@@ -174,7 +180,7 @@ export default function VideosArea() {
                     theme={theme}
                 />
                 <div className="section">
-                    {videos && videos.length > 0 ? videos.map((video:Videos) => {
+                    {videos && videos.length > 0 ? videos.map((video: Videos) => {
                         return (
                             <>
                                 <div key={video.id} className="video-box">

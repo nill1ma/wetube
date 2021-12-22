@@ -13,7 +13,6 @@ type TActions = {
 
 type TVideo = IPlaylistItems | IFavorites | Videos
 
-// type Icons = 'folder-plus' 
 type ActionsProps = {
     video: TVideo
     action: TActions
@@ -28,7 +27,7 @@ export default function Actions(props: ActionsProps) {
             return !video['favorite']
         else if ('folder-plus' === iconName)
             return !video['playlist']
-        return false
+        return true
     }
 
     const isFoPIcon = isFavoriteOrPlaylistIcon(action.icon.iconName)
@@ -36,7 +35,7 @@ export default function Actions(props: ActionsProps) {
     return (
         <FontAwesomeIcon onClick={() =>
             action.function(video.id, isFoPIcon)}
-            color={isFoPIcon ? theme.activeIcon : theme.unactiveIcon}
+            color={!isFoPIcon ? theme.activeIcon : theme.unactiveIcon}
             icon={action.icon} />
     )
 }
