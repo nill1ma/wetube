@@ -11,6 +11,7 @@ import { search } from '../../services/YoutubeApi';
 import Header from "../../components/Header";
 import VideoBox from '../../components/VideoBox';
 import './styles.scss';
+import { SelectModal } from "./styles";
 
 export default function VideosArea() {
 
@@ -165,8 +166,7 @@ export default function VideosArea() {
 
     const handlePlayListSelected = (value: any) => {
         const currentPlaylist = playlistNames.find(playlist => playlist.id === Number(value))!
-        const { active, ...newObj } = currentPlaylist
-        setPlaylistSelected(newObj)
+        setPlaylistSelected(currentPlaylist)
     }
 
     return (
@@ -224,26 +224,16 @@ export default function VideosArea() {
                                             Add New Playlist
                                         </Link>
                                     </span>
-                                    <select
+                                    <SelectModal background={theme.section} color={theme.font}
                                         onChange={(e: any) => handlePlayListSelected(e.target.value)}
-                                        style={{
-                                            marginTop: '10px',
-                                            width: '100%',
-                                            fontSize: '16px',
-                                            outline: 'none',
-                                            padding: '20px',
-                                            opacity: '100%',
-                                            backgroundColor: theme.section,
-                                            color: theme.font
-                                        }}>
-                                        <option value="" style={{ display: playlistSelected && playlistSelected.name === '' ? 'none' : '' }}>Choose a Playlist</option>
+                                        >
                                         {playlistNames && playlistNames.length > 0 ?
                                             Array.from(playlistNames).map((playlistName: IPlaylists) => {
                                                 return (
-                                                    <option key={playlistName.id} value={playlistName.id}>{playlistName.name}</option>
+                                                    <option selected={playlistName.active} key={playlistName.id} value={playlistName.id}>{playlistName.name}</option>
                                                 )
-                                            }) : <></>}
-                                    </select>
+                                            }) : <option value="" style={{ display: playlistSelected && playlistSelected.name === '' ? 'none' : '' }}>Create a Playlist</option>}
+                                    </SelectModal>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                                         <button
                                             onClick={() => setIsOpen(false)}
