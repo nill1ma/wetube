@@ -1,17 +1,18 @@
 import { faArrowAltCircleLeft, faArrowAltCircleRight, faFolderPlus, faInfoCircle, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useEffect, useState } from 'react';
-import Modal from "react-modal";
 import { Link } from 'react-router-dom';
+import GenericModal from "../../components/GenericModal";
+import Header from "../../components/Header";
+import ModalButtons from "../../components/ModalButtons";
+import VideoBox from '../../components/VideoBox';
 import ThemeContext from '../../context';
 import { IPlaylists } from "../../interfaces/IPlaylists";
 import { Videos } from '../../interfaces/Videos';
 import { getStorage, removeVideo, setGenericStorage } from '../../services/Util';
 import { search } from '../../services/YoutubeApi';
-import Header from "../../components/Header";
-import VideoBox from '../../components/VideoBox';
-import './styles.scss';
 import { SelectModal } from "./styles";
+import './styles.scss';
 
 export default function VideosArea() {
 
@@ -110,16 +111,16 @@ export default function VideosArea() {
         setVideos([...videos])
     }
 
-    const handlePlayList = (idVideo: string, playlist: boolean) => {
-        if (idVideo && idVideo !== '') {
+    const handlePlayList = () => {
+        if (newPlaylistVideo.id && newPlaylistVideo.id !== '') {
             videos.map((video) => {
-                if (video.id === idVideo) {
-                    video.playlist = playlist
+                if (video.id === newPlaylistVideo.id) {
+                    video.playlist = newPlaylistVideo.isAdded
                     video.playlist ?
                         video.pcolor = colorTag[0]
                         : video.pcolor = colorTag[1]
                     let value = {
-                        id: idVideo,
+                        id: newPlaylistVideo.id,
                         pcolor: video.pcolor,
                         playlist: video.playlist,
                         title: video.title,
@@ -191,34 +192,7 @@ export default function VideosArea() {
                                         ]}
                                     />
                                 </div>
-                                <Modal
-                                    isOpen={isOpen}
-                                    onRequestClose={close}
-                                    style={{
-                                        overlay: {
-                                            backgroundColor: theme.sideBar,
-                                            width: '35vw',
-                                            margin: 'auto',
-                                            opacity: '40%',
-                                            height: '260px',
-                                            borderRadius: '10px'
-                                        },
-                                        content: {
-                                            background: theme.sideBar,
-                                            overflow: "auto",
-                                            WebkitOverflowScrolling: "touch",
-                                            borderRadius: "4px",
-                                            outline: "none",
-                                            border: 'none',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            color: theme.font,
-                                            fontSize: '18px',
-                                        }
-                                    }}
-                                >
+                                <GenericModal isOpen={isOpen} close={close}>
                                     <span style={{ alignSelf: 'flex-end' }}>
                                         <Link style={{ textDecoration: 'none', color: '#1a2eff', fontSize: '16px' }} to={'create'}>
                                             Add New Playlist
@@ -235,43 +209,9 @@ export default function VideosArea() {
                                             }) : <option value="" style={{ display: playlistSelected && playlistSelected.name === '' ? 'none' : '' }}>Create a Playlist</option>}
                                     </SelectModal>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                        <button
-                                            onClick={() => setIsOpen(false)}
-                                            style={{
-                                                marginTop: '10px',
-                                                borderRadius: '2px',
-                                                cursor: 'pointer',
-                                                fontWeight: 'bold',
-                                                color: theme.font,
-                                                backgroundColor: '#f00',
-                                                width: '45%',
-                                                padding: '10px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                border: 'none',
-                                                outline: 'none'
-                                            }}>Cancel</button>
-                                        <button
-                                            disabled={isDisabled}
-                                            onClick={() => handlePlayList(newPlaylistVideo.id, newPlaylistVideo.isAdded)}
-                                            style={{
-                                                marginTop: '10px',
-                                                borderRadius: '2px',
-                                                cursor: !isDisabled ? 'pointer' : '',
-                                                fontWeight: 'bold',
-                                                color: !isDisabled ? theme.font : 'rgba(255,255,255,0.3)',
-                                                backgroundColor: !isDisabled ? '#1a2eff' : 'rgba(255,255,255,0.1)',
-                                                width: '45%',
-                                                padding: '10px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                border: 'none',
-                                                outline: 'none'
-                                            }}>Save</button>
+                                        <ModalButtons handleIsOpen={close} handlePlayList={handlePlayList} isDisabled={isDisabled} />
                                     </div>
-                                </Modal>
+                                </GenericModal>
                             </>
                         )
                     }) : (
