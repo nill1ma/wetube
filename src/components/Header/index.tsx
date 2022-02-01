@@ -2,10 +2,20 @@ import React from 'react'
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './styles.scss'
+import { ITheme } from '../../interfaces/ITheme';
 
 
-export default function Header(props: any) {
-    const { keyWord, getResearch, setKeyWord, research, theme } = props
+type HeaderProps = {
+    keyWord: string
+    getResearch: (event : any) => void
+    handleKeyword: (event : any) => void
+    research: () => void
+    theme: ITheme
+}
+
+
+export default function Header(props: HeaderProps) {
+    const { keyWord, getResearch, handleKeyword, research, theme } = props
     return (
             <div className="header">
                 <div className="header">
@@ -15,7 +25,7 @@ export default function Header(props: any) {
                             name='research'
                             value={keyWord}
                             onKeyPress={(e) => getResearch(e)}
-                            onChange={(e) => setKeyWord(e.target.value)}
+                            onChange={(e) => handleKeyword(e)}
                             type="text" />
                         <button data-testid="button-field" onClick={() => research()} className="icon">
                             <FontAwesomeIcon size={'lg'} color={'#2C2C2C'} rotation={90} icon={faSearch} />
