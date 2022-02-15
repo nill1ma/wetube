@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import GenericModal from "../../components/GenericModal";
 import Header from "../../components/Header";
 import ModalButtons from "../../components/ModalButtons";
-import VideoBox from "../../components/VideoBox";
+import { VideoBox } from "../../components/VideoBox";
 import ThemeContext from "../../context";
 import { IPlaylists } from "../../interfaces/IPlaylists";
 import { Videos } from "../../interfaces/Videos";
