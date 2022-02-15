@@ -21,12 +21,12 @@ import {
   setGenericStorage,
 } from "../../services/Util";
 import { search } from "../../services/YoutubeApi";
-import { SelectModal } from "./styles";
+import { AddNewPlaylist, SelectModal } from "./styles";
 import "./styles.scss";
 
 export default function VideosArea() {
   const [videos, setVideos] = useState<Videos[]>(getStorage("researched"));
-  const [keyWord, setKeyWord] = useState(getStorage('keyword'));
+  const [keyWord, setKeyWord] = useState(getStorage("keyword"));
   const [next, setNext] = useState("");
   const [back, setBack] = useState("");
   const [theme] = useContext(ThemeContext);
@@ -202,7 +202,7 @@ export default function VideosArea() {
   const handleKeyword = (event: any) => {
     const { value } = event.target;
     setKeyWord(value);
-    setGenericStorage(value, 'keyword')
+    setGenericStorage(value, "keyword");
   };
 
   return (
@@ -238,16 +238,9 @@ export default function VideosArea() {
                   </div>
                   <GenericModal isOpen={isOpen} close={close}>
                     <span style={{ alignSelf: "flex-end" }}>
-                      <Link
-                        style={{
-                          textDecoration: "none",
-                          color: "#1a2eff",
-                          fontSize: "16px",
-                        }}
-                        to={"create"}
-                      >
+                      <AddNewPlaylist to={"create"}>
                         Add New Playlist
-                      </Link>
+                      </AddNewPlaylist>
                     </span>
                     <SelectModal
                       background={theme.section}
